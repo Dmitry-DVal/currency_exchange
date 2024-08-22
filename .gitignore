@@ -1,0 +1,13 @@
+# Виртуальная среда
+venv/
+
+# Файлы проекта PyCharm
+.idea/
+
+# Файлы и прочее для опытов
+test/
+homework/
+pygame-readthedocs-io-en-latest.pdf
+server/
+
+__pycache__/
