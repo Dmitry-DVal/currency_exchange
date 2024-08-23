@@ -7,17 +7,17 @@ class CurrenciesDataBaseCreator():
 
     """
 
-    def __init__(self, currencies_list):
+    def __init__(self, currencies_list: list):
         self.create_bd(currencies_list)
 
-    def create_bd(self, currencies_list):
-        with sqlite3.connect('currencies') as con:
+    def create_bd(self, currencies_list: list):
+        with sqlite3.connect('currencies.db') as con:
             cur = con.cursor()  # курсор
 
             # Создать таблицу, если она не существует
             cur.execute("""CREATE TABLE IF NOT EXISTS currencies
             (ID INTEGER PRIMARY KEY AUTOINCREMENT, 
-            Code VARCHAR,
+            Code VARCHAR UNIQUE,
             FullName VARCHAR, 
             Sign VARCHAR)""")
 
