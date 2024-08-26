@@ -1,4 +1,4 @@
-# Игра Инопланетнок вторжение
+# Проект “Обмен валют”
 
 ## Ссылка с информацией
 https://zhukovsd.github.io/python-backend-learning-course/projects/currency-exchange/
