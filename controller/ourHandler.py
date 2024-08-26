@@ -1,5 +1,7 @@
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler
+from view.jsonFormater import JsonFormater
+from model.currenciesRepository import CureenciesRepository
 
 
 class OurHandler(BaseHTTPRequestHandler):
@@ -10,8 +12,14 @@ class OurHandler(BaseHTTPRequestHandler):
             self.get_currencies()
 
     def get_currencies(self):
+        currencies = CureenciesRepository().get_cureencies()
+        json_response = JsonFormater().to_json(currencies)
         self.send_response(HTTPStatus.OK)  # Заголовок. Отправляем статут клиенту
-        self.send_header("Content-Type", 'text/html; charset=UTF-8')  # Передаем заголовок.
+        self.send_header("Content-Type", 'text/json; charset=UTF-8')  # Передаем заголовок.
         self.end_headers()
 
-        self.wfile.write("<h1>Здесь будет весь список валют</h1>".encode("utf-8"))  # Запись ответа клиенту
+        self.wfile.write(json_response.encode("utf-8"))
+
+
+if __name__ == '__main__':
+    pass
