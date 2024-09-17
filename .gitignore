@@ -11,3 +11,6 @@ pygame-readthedocs-io-en-latest.pdf
 server/
 
 __pycache__/
+
+# Добавим файлы для игнора с расширением /txt
+*.txt

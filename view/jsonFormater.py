@@ -4,8 +4,13 @@ import json
 class JsonFormater:
 
     def to_json(self, data):
-        result = self.make_dict(data)
-        return json.dumps(result)
+        # Проверяем, если данные — это список (например, для валют), обрабатываем их
+        if isinstance(data, list):
+            result = self.make_dict(data)
+            return json.dumps(result)
+        else:
+            # Если это словарь или ошибка, возвращаем его напрямую
+            return json.dumps(data)
 
     @staticmethod
     def make_dict(data):
