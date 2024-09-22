@@ -28,11 +28,13 @@ class OurHandler(BaseHTTPRequestHandler):
         if self.path == '/currencies':
             content_length = int(self.headers['Content-Length'])  # Получаем длину содержимого
             post_data = self.rfile.read(content_length).decode('utf-8')  # Читаем и декодируем данные
-            print("POST data:", post_data)  # Выводим данные, чтобы понять как они выглядят
+            # print("POST data:", post_data)  # Выводим данные, чтобы понять как они выглядят
             PostHandler.add_currency(self, post_data)
+        else:
+            self.page_not_found()
 
 
-def page_not_found(self):
+    def page_not_found(self):
         self.send_response(HTTPStatus.NOT_FOUND)
         self.send_header("Content-Type", "text/html; charset=UTF-8")  # Передаем заголовок.
         self.end_headers()  # Закрываем заголовок

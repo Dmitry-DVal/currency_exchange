@@ -5,7 +5,10 @@ class PostHandler():
 
     @staticmethod
     def add_currency(handler, data):
-        print("Received data:", data, type(data))  # Выводим данные, полученные из POST-запроса
+        print("Received data:", data, type(data))  # Проверка, Выводим данные, полученные из POST-запроса (сейчас это json)
+        result = PostHandler.covert_to_dict(data)
+        print(result, type(result)) # Проверка, преобразования в словарь dict
+        #print(PostHandler.check_fields(result))
         handler.send_response(HTTPStatus.OK)
         handler.send_header("Content-Type", "text/html; charset=UTF-8")
         handler.end_headers()
@@ -15,10 +18,17 @@ class PostHandler():
             key, value = 1, 1
 
 
-    def covert_to_dict(self):
-        pass
-    def all_fields_exist(self):
-        pass
+    @staticmethod
+    def covert_to_dict(data):
+        result = {}
+        for i in data.split('&'):
+            result[i.split('=')[0]] = i.split('=')[1]
+        return result
+
+    # @staticmethod
+    # def check_fields(your_dict):
+    #     return all(your_dict[h] in your_dict for ['name', 'code', 'sign'])
+
     def currency_already_exists():
         pass
 
