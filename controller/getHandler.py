@@ -19,7 +19,7 @@ class GetHandler():
     @staticmethod
     def get_currency(handler, currency_code):
         '''Отправляет результат запроса конкретной валюты.'''
-        currency = CurrencyRepository(currency_code).get_cureency()
+        currency = CurrencyRepository(currency_code).get_currency()
         if not currency:
             # Если валюта не найдена, отправляем 404 ошибку
             GetHandler.is_not_currency_code(handler)

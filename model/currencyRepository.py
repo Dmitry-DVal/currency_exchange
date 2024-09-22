@@ -8,7 +8,7 @@ class CurrencyRepository:
     def __init__(self, currency_code):
         self.currency_code = currency_code
 
-    def get_cureency(self):
+    def get_currency(self):
         # Построение пути к базе данных относительно текущего файла
         db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
         with sqlite3.connect(db_path) as con:
@@ -18,6 +18,14 @@ class CurrencyRepository:
             result = cur.fetchall()
             return result
 
+    def currency_exists(self):
+        # Построение пути к базе данных относительно текущего файла
+        db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
+        with sqlite3.connect(db_path) as con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM currencies WHERE Code = ?", (self.currency_code,))
+            result = cur.fetchall()
+            return bool(result) # Если список не пустой вернет True
 
 if __name__ == '__main__':
     pass
