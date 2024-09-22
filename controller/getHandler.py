@@ -16,7 +16,6 @@ class GetHandler():
 
         handler.wfile.write(json_response.encode("utf-8"))
 
-
     @staticmethod
     def get_currency(handler, currency_code):
         '''Отправляет результат запроса конкретной валюты.'''
@@ -27,7 +26,6 @@ class GetHandler():
         else:
             # Если валюта найдена, возвращаем её в формате JSON
             GetHandler.is_currency_code(handler, currency)
-
 
     @staticmethod
     def is_currency_code(handler, currency):

@@ -4,25 +4,24 @@ from controller.getHandler import GetHandler
 from controller.postHandler import PostHandler
 
 
-
 class OurHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/currencies':
             GetHandler.get_currencies(self)
         elif self.path.startswith('/currency/'):
-            #Извлечение кода валюты из пути
+            # Извлечение кода валюты из пути
             currency_code = self.path.split('/')[-1]
             GetHandler.get_currency(self, currency_code)
         else:
             self.page_not_found()
 
-# корректный запрос
-# curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
-# не хватает поля
-# curl -X POST http://localhost:8000/currencies -d "code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
-# уже есть такой код валюты
-# curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=RUB&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
+    # корректный запрос
+    # curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
+    # не хватает поля
+    # curl -X POST http://localhost:8000/currencies -d "code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
+    # уже есть такой код валюты
+    # curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=RUB&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
 
     def do_POST(self):
         if self.path == '/currencies':
@@ -32,7 +31,6 @@ class OurHandler(BaseHTTPRequestHandler):
             PostHandler.add_currency(self, post_data)
         else:
             self.page_not_found()
-
 
     def page_not_found(self):
         self.send_response(HTTPStatus.NOT_FOUND)
