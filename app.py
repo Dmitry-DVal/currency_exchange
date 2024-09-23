@@ -13,4 +13,3 @@ if __name__ == "__main__":
 # GET запросы можно также отправлять через curl или через браузер, пример для браузера
 # http://localhost:8000/currencies
 # http://localhost:8000/currency/RUB
-

@@ -1,7 +1,7 @@
-from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler
 from controller.getHandler import GetHandler
 from controller.postHandler import PostHandler
+from controller.responseHandler import ResponseHandler
 
 
 class OurHandler(BaseHTTPRequestHandler):
@@ -15,23 +15,15 @@ class OurHandler(BaseHTTPRequestHandler):
             currency_code = self.path.split('/')[-1]
             GetHandler.get_currency(self, currency_code)
         else:
-            self.page_not_found()
+            ResponseHandler.page_not_found_400(self)
 
     def do_POST(self):
         if self.path == '/currencies':
             content_length = int(self.headers['Content-Length'])  # Получаем длину содержимого
             post_data = self.rfile.read(content_length).decode('utf-8')  # Читаем и декодируем данные
-            # print("POST data:", post_data)  # Выводим данные, чтобы понять как они выглядят
             PostHandler.add_currency(self, post_data)
         else:
-            self.page_not_found()
-
-    def page_not_found(self):
-        self.send_response(HTTPStatus.NOT_FOUND)
-        self.send_header("Content-Type", "text/html; charset=UTF-8")  # Передаем заголовок.
-        self.end_headers()  # Закрываем заголовок
-
-        self.wfile.write("<h1>404 NOT FOUND!</h1>".encode("utf-8"))  # Запись ответа клиенту
+            ResponseHandler.page_not_found_400(self)
 
 
 if __name__ == '__main__':
