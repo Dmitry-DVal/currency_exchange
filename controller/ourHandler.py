@@ -16,12 +16,12 @@ class OurHandler(BaseHTTPRequestHandler):
         else:
             self.page_not_found()
 
-    # корректный запрос
-    # curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
-    # не хватает поля
-    # curl -X POST http://localhost:8000/currencies -d "code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
-    # уже есть такой код валюты
-    # curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=RUB&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
+# корректный запрос
+# curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
+# не хватает поля
+# curl -X POST http://localhost:8000/currencies -d "code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
+# уже есть такой код валюты
+# curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=RUB&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
 
     def do_POST(self):
         if self.path == '/currencies':

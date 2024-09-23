@@ -14,17 +14,23 @@ class PostHandler():
         print("Присутсвие нужных полей =", PostHandler.check_fields(request_dict))  # Проверка, что нужные поля есть
         if not PostHandler.check_fields(request_dict):
             PostHandler.bad_request(handler)
+            return
         if CurrencyRepository(request_dict['code']).currency_exists():
             print("Валюта уже есть в БД")
             PostHandler.currency_already_exists(handler)
+            return 
         else:
-            pass
-            # Добавить в БД
+            print("")
+            PostHandler.add_currency_to_DB(handler, request_dict)
+            # Добавить в БД + 
             # Вывести результат
         # handler.send_response(HTTPStatus.OK)
         # handler.send_header("Content-Type", "text/html; charset=UTF-8")
         # handler.end_headers()
         # handler.wfile.write("<h1>200 We'll add your currency</h1>".encode("utf-8"))
+
+            # Если валюта найдена, возвращаем её в формате JSON
+            # GetHandler.is_currency_code(handler, currency)
 
 
     @staticmethod
@@ -55,6 +61,11 @@ class PostHandler():
         handler.send_header("Content-Type", "text/html; charset=UTF-8")
         handler.end_headers()
         handler.wfile.write("<h1>409 Currency with this code already exists/h1>".encode("utf-8"))
+
+    @staticmethod
+    def add_currency_to_DB(handler, request_dict):
+        CurrencyRepository(request_dict['code']).add_currency(request_dict)
+        print("Добавили валюту в БД")
 
 # Получили данные
 # Проверили что данных достатоно и они корретны (если нет отправили ошибку) (400 нет нужного поля или формат не верный,  409 ваолюта с этим кодом существует уже, 200 ок)
