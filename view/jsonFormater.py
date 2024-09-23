@@ -2,6 +2,7 @@ import json
 
 
 class JsonFormater:
+    "Преобразует данные в json"
 
     def to_json(self, data):
         # Проверяем, если данные — это список (например, для валют), обрабатываем их

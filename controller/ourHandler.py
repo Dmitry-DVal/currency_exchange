@@ -5,6 +5,7 @@ from controller.postHandler import PostHandler
 
 
 class OurHandler(BaseHTTPRequestHandler):
+    """Главный обработчик запросов, распределяет запросы, выдает ошибку если такой страницы не существует"""
 
     def do_GET(self):
         if self.path == '/currencies':

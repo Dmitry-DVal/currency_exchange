@@ -5,9 +5,11 @@ from view.jsonFormater import JsonFormater
 
 
 class GetHandler():
+    """Обработчик GET запросов"""
 
     @staticmethod
     def get_currencies(handler):
+        '''Отаравляет клиенту список всех валют'''
         currencies = CureenciesRepository().get_cureencies()
         json_response = JsonFormater().to_json(currencies)
         handler.send_response(HTTPStatus.OK)  # Заголовок. Отправляем статут клиенту
@@ -18,7 +20,7 @@ class GetHandler():
 
     @staticmethod
     def get_currency(handler, currency_code):
-        '''Отправляет результат запроса конкретной валюты.'''
+        '''Отправляет клиенту конкретную валюту'''
         currency = CurrencyRepository(currency_code).get_currency()
         if not currency:
             # Если валюта не найдена, отправляем 404 ошибку
@@ -30,7 +32,7 @@ class GetHandler():
     @staticmethod
     def is_currency_code(handler, currency):
         json_response = JsonFormater().to_json(currency)
-        handler.send_response(HTTPStatus.OK)
+        handler.send_response(HTTPStatus.OK)  # 200
         handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()
 
@@ -38,7 +40,7 @@ class GetHandler():
 
     @staticmethod
     def is_not_currency_code(handler):
-        handler.send_response(HTTPStatus.NOT_FOUND)
+        handler.send_response(HTTPStatus.NOT_FOUND)  # 404
         handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()
 
