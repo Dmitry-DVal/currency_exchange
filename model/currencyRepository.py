@@ -33,6 +33,5 @@ class CurrencyRepository:
             con.commit()  # Сохраняем изменения в базе данных
 
 
-
 if __name__ == '__main__':
     pass

@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class ExchangeRatesDataBaseCreator():
     """
     Создает таблицу exchange_rates, если она ещё не создана
@@ -7,7 +8,6 @@ class ExchangeRatesDataBaseCreator():
 
     def __init__(self, exchangeRates):
         self.create_bd(exchangeRates)
-
 
     def create_bd(self, exchangeRates):
         with sqlite3.connect('currencies.db') as con:
