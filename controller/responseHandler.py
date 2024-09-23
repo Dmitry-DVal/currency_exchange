@@ -43,3 +43,10 @@ class ResponseHandler:
         handler.send_header("Content-Type", "text/html; charset=UTF-8")
         handler.end_headers()
         handler.wfile.write("<h1>409 Currency with this code already exists/h1>".encode("utf-8"))
+
+    @staticmethod
+    def server_error_500(handler):
+        handler.send_response(HTTPStatus.INTERNAL_SERVER_ERROR)  # 500
+        handler.send_header("Content-Type", "text/html; charset=UTF-8")
+        handler.end_headers()
+        handler.wfile.write("<h1>500 Server-side error. The database is unavailable/h1>".encode("utf-8"))

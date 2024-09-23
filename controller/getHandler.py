@@ -22,3 +22,8 @@ class GetHandler:
         else:
             # Если валюта найдена, возвращаем её в формате JSON
             ResponseHandler.good_request_200(handler, currency)
+
+    @staticmethod
+    def get_exchange_rates(handler):
+        """Отправляет клиенту список всех обменных курсов"""
+        pass
