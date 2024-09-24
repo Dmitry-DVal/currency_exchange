@@ -8,7 +8,7 @@ class JsonFormater:
         # Проверяем, если данные — это список (например, для валют), обрабатываем их
         if isinstance(data, list):
             result = self.make_dict(data)
-            return json.dumps(result)
+            return json.dumps(result, indent=4)
         else:
             # Если это словарь или ошибка, возвращаем его напрямую
             return json.dumps(data)

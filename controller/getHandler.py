@@ -1,5 +1,6 @@
 from model.currenciesRepository import CureenciesRepository
 from model.currencyRepository import CurrencyRepository
+from model.exchangeRatesRepository import ExchangeRatesRepository
 from controller.responseHandler import ResponseHandler
 
 
@@ -26,4 +27,5 @@ class GetHandler:
     @staticmethod
     def get_exchange_rates(handler):
         """Отправляет клиенту список всех обменных курсов"""
-        pass
+        exchange_rates = ExchangeRatesRepository().get_exchange_rates()  # [(1, 1, 2, 0.00984), (2, 2, 1, 101.62), (3, 1, 5, 0.89967), (4, 5, 2, 91.29), (5, 5, 3, 2.7), (6, 5, 4, 7.14), (7, 5, 1, 1.11)]
+        ResponseHandler.good_request_200(handler, exchange_rates)

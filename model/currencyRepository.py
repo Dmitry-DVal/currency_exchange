@@ -11,7 +11,7 @@ class CurrencyRepository:
         self.db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
 
     def get_currency(self):
-        'Получает информацию по конкретной валюте из БД'
+        """Получает информацию по конкретной валюте из БД"""
         with sqlite3.connect(self.db_path) as con:
             cur = con.cursor()
 
@@ -20,7 +20,7 @@ class CurrencyRepository:
             return result
 
     def currency_exists(self):
-        "Проверяет существует ли валюта"
+        """Проверяет, существует ли валюта"""
         with sqlite3.connect(self.db_path) as con:
             cur = con.cursor()
             cur.execute("SELECT * FROM currencies WHERE Code = ?", (self.currency_code,))
@@ -28,7 +28,7 @@ class CurrencyRepository:
             return bool(result)  # Если список не пустой вернет True
 
     def add_currency(self, request_dict):
-        "Добавляет валюту в БД"
+        """Добавляет валюту в БД"""
         with sqlite3.connect(self.db_path) as con:
             cur = con.cursor()
             cur.execute("INSERT INTO currencies (Code, Fullname, Sign) VALUES (?, ?, ?)",
