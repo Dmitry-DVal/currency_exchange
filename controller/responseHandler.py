@@ -29,12 +29,12 @@ class ResponseHandler:
         handler.wfile.write("<h1>404 NOT FOUND!</h1>".encode("utf-8"))  # Запись ответа клиенту
 
     @staticmethod
-    def currency_not_found(handler):
+    def currency_not_found(handler, message="Currency not found"):
         handler.send_response(HTTPStatus.NOT_FOUND)  # 404
         handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()
 
-        error_response = JsonFormater().to_json({"error": "Currency not found"})
+        error_response = JsonFormater().to_json({"error": message})
         handler.wfile.write(error_response.encode("utf-8"))
 
     @staticmethod

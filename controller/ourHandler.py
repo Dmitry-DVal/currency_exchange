@@ -23,9 +23,16 @@ class OurHandler(BaseHTTPRequestHandler):
                 GetHandler.get_currency(self, currency_code)
             except sqlite3.OperationalError:
                 ResponseHandler.server_error_500(self)
-        elif self.path.startswith('/exchangeRates'):
+        elif self.path == '/exchangeRates':
             try:
                 GetHandler.get_exchange_rates(self)
+            except sqlite3.OperationalError:
+                ResponseHandler.server_error_500(self)
+        elif self.path.startswith('/exchangeRate'):
+            base_currency_code, target_currency_code = self.path.split('/')[-1][:3], self.path.split('/')[-1][3:]
+            print(base_currency_code, target_currency_code)
+            try:
+                GetHandler.get_exchange_rate(self, base_currency_code, target_currency_code)
             except sqlite3.OperationalError:
                 ResponseHandler.server_error_500(self)
         else:
