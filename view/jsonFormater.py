@@ -1,5 +1,4 @@
 import json
-from model.exchangeRatesRepository import ExchangeRatesRepository
 
 
 class JsonFormater:
@@ -7,7 +6,7 @@ class JsonFormater:
 
     def to_json(self, data):
         # Проверяем, если данные — это список (например, для валют), обрабатываем их
-        if isinstance(data, list) and len(data[0]) > 6: # Нужна нормальная проверка
+        if JsonFormater.is_exchange_rates(data):  # Нужна нормальная проверка
             result = self.make_rates_dict(data)
             return json.dumps(result, indent=4)
         elif isinstance(data, list):
@@ -30,7 +29,12 @@ class JsonFormater:
         return result
 
     @staticmethod
+    def is_exchange_rates(data):
+        return len(data) == 10 and isinstance(data[9], (float, int))
+
+    @staticmethod
     def make_rates_dict(data):
+        print(data)
         result = []
         for row in data:
             result.append({

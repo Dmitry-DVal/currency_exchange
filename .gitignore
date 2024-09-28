@@ -14,3 +14,5 @@ __pycache__/
 
 # Добавим файлы для игнора с расширением /txt
 *.txt
+
+model/dataBase/currencies.db

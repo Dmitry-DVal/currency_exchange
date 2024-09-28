@@ -1,15 +1,16 @@
 import sqlite3
 
 
-class ExchangeRatesDataBaseCreator():
+class ExchangeRatesDataBaseCreator:
     """
     Создает таблицу exchange_rates, если она ещё не создана
     """
 
-    def __init__(self, exchangeRates):
-        self.create_bd(exchangeRates)
+    def __init__(self, exchange_rates):
+        self.create_bd(exchange_rates)
 
-    def create_bd(self, exchangeRates):
+    @staticmethod
+    def create_bd(exchange_rates):
         with sqlite3.connect('currencies.db') as con:
             cur = con.cursor()
 
@@ -24,16 +25,16 @@ class ExchangeRatesDataBaseCreator():
             UNIQUE(BaseCurrencyId, TargetCurrencyId))
             """)
 
-            cur.executemany("INSERT INTO exchange_rates VALUES(NULL, ?, ?, ?)", exchangeRates)
+            cur.executemany("INSERT INTO exchange_rates VALUES(NULL, ?, ?, ?)", exchange_rates)
 
 
 if __name__ == '__main__':
     # Начальные данные для обменных курсов валют
-    exchangeRates = [(1, 2, 0.00984),
-                     (2, 1, 101.62),
-                     (1, 5, 0.89967),
-                     (5, 2, 91.29),
-                     (5, 3, 2.7),
-                     (5, 4, 7.14),
-                     (5, 1, 1.11)]
-    ExchangeRatesDataBaseCreator(exchangeRates)
+    exchange_rates = [(1, 2, 0.00984),
+                      (2, 1, 101.62),
+                      (1, 5, 0.89967),
+                      (5, 2, 91.29),
+                      (5, 3, 2.7),
+                      (5, 4, 7.14),
+                      (5, 1, 1.11)]
+    ExchangeRatesDataBaseCreator(exchange_rates)
