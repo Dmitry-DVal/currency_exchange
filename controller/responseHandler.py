@@ -14,11 +14,11 @@ class ResponseHandler:
         handler.wfile.write(json_response.encode("utf-8"))
 
     @staticmethod
-    def bad_request_400(handler):
+    def bad_request_400(handler, message='Required form field is missing'):
         handler.send_response(HTTPStatus.BAD_REQUEST)  # 400
         handler.send_header("Content-Type", "text/html; charset=UTF-8")
         handler.end_headers()
-        handler.wfile.write("<h1>400 Required form field is missing/h1>".encode("utf-8"))
+        handler.wfile.write(f"<h1>400 {message}</h1>".encode("utf-8"))
 
     @staticmethod
     def page_not_found_400(handler):

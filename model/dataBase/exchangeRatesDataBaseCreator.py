@@ -25,7 +25,7 @@ class ExchangeRatesDataBaseCreator:
             UNIQUE(BaseCurrencyId, TargetCurrencyId))
             """)
 
-            cur.executemany("INSERT INTO exchange_rates VALUES(NULL, ?, ?, ?)", exchange_rates)
+            cur.executemany("INSERT OR IGNORE INTO exchange_rates VALUES(NULL, ?, ?, ?)", exchange_rates)
 
 
 if __name__ == '__main__':

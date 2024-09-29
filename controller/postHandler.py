@@ -1,5 +1,6 @@
 from model.currencyRepository import CurrencyRepository
 from controller.responseHandler import ResponseHandler
+import sqlite3
 
 
 class PostHandler:
@@ -15,7 +16,10 @@ class PostHandler:
             ResponseHandler.currency_already_exists_409(handler)
             return
         else:
-            PostHandler.add_currency_to_db(handler, request_dict)
+            try:
+                PostHandler.add_currency_to_db(handler, request_dict)
+            except sqlite3.IntegrityError:
+                ResponseHandler.bad_request_400(handler, 'Check field, name=str; code=str, len=3; sign=str;')
 
     @staticmethod
     def covert_to_dict(data):

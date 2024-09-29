@@ -17,9 +17,9 @@ class CurrenciesDataBaseCreator():
             # Создать таблицу, если она не существует
             cur.execute("""CREATE TABLE IF NOT EXISTS currencies
             (ID INTEGER PRIMARY KEY AUTOINCREMENT, 
-            Code VARCHAR UNIQUE,
-            FullName VARCHAR, 
-            Sign VARCHAR)""")
+    Code VARCHAR(3) UNIQUE NOT NULL CHECK(LENGTH(Code) = 3 AND Code GLOB '[A-Z][A-Z][A-Z]'),
+    FullName VARCHAR NOT NULL, 
+    Sign VARCHAR NOT NULL)""")
 
             # Проверка, есть ли уже записи в таблице
             cur.execute("SELECT COUNT(*) FROM currencies")
