@@ -11,6 +11,7 @@ class OurHandler(BaseHTTPRequestHandler):
     """Главный обработчик запросов, распределяет запросы, выдает ошибку если такой страницы не существует"""
 
     def do_GET(self):
+        """Обработчик GET запросов"""
         if self.path == '/currencies':
             try:
                 GetHandler.get_currencies(self)
@@ -30,7 +31,6 @@ class OurHandler(BaseHTTPRequestHandler):
                 ResponseHandler.server_error_500(self)
         elif self.path.startswith('/exchangeRate'):
             base_currency_code, target_currency_code = self.path.split('/')[-1][:3], self.path.split('/')[-1][3:]
-            print(base_currency_code, target_currency_code)
             try:
                 GetHandler.get_exchange_rate(self, base_currency_code, target_currency_code)
             except sqlite3.OperationalError:
@@ -39,6 +39,7 @@ class OurHandler(BaseHTTPRequestHandler):
             ResponseHandler.page_not_found_400(self)
 
     def do_POST(self):
+        """Обработчик POST запросов"""
         if self.path == '/currencies':
             content_length = int(self.headers['Content-Length'])  # Получаем длину содержимого
             post_data = self.rfile.read(content_length).decode('utf-8')  # Читаем и декодируем данные

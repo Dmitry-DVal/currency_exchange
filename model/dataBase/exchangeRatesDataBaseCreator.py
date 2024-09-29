@@ -11,6 +11,7 @@ class ExchangeRatesDataBaseCreator:
 
     @staticmethod
     def create_bd(exchange_rates):
+        """Создает таблицу exchange_rates, если она ещё не создана."""
         with sqlite3.connect('currencies.db') as con:
             cur = con.cursor()
 

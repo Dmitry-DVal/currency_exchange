@@ -35,7 +35,7 @@ JOIN currencies AS tc ON er.TargetCurrencyId = tc.ID""")
             result = cur.fetchall()
             return result
 
-    def get_exchange_rate(self, base_currency_code, target_currency_code):
+    def get_exchange_rate(self, base_currency_code: str, target_currency_code: str):
         """Получает запрашиваемый обменный курс."""
         with sqlite3.connect(self.db_path) as con:
             cur = con.cursor()

@@ -3,15 +3,15 @@ import os
 
 
 class CurrencyRepository:
-    """Класс обращается к БД и получает список конкретной валюты, добавляет валюту в БД"""
+    """Класс обращается к БД и получает список конкретной валюты, добавляет валюту в БД."""
 
-    def __init__(self, currency_code):
+    def __init__(self, currency_code: str):
         self.currency_code = currency_code
         # Построение пути к базе данных относительно текущего файла
         self.db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
 
     def get_currency(self):
-        """Получает информацию по конкретной валюте из БД"""
+        """Получает информацию по конкретной валюте из БД."""
         with sqlite3.connect(self.db_path) as con:
             cur = con.cursor()
 
@@ -27,7 +27,7 @@ class CurrencyRepository:
             result = cur.fetchall()
             return bool(result)  # Если список не пустой вернет True
 
-    def add_currency(self, request_dict):
+    def add_currency(self, request_dict: dict):
         """Добавляет валюту в БД"""
         with sqlite3.connect(self.db_path) as con:
             cur = con.cursor()

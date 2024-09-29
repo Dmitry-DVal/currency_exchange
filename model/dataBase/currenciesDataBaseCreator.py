@@ -11,6 +11,7 @@ class CurrenciesDataBaseCreator():
         self.create_bd(currencies_list)
 
     def create_bd(self, currencies_list: list):
+        """Создает таблицу currencies, если она ещё не создана."""
         with sqlite3.connect('currencies.db') as con:
             cur = con.cursor()  # курсор
 

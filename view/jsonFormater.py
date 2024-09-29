@@ -2,9 +2,14 @@ import json
 
 
 class JsonFormater:
-    """Преобразует данные в json"""
+    """
+        Преобразует данные в JSON-строку.
 
-    def to_json(self, data):
+        :param data: Данные для преобразования в json, могут быть списком, словарем или None.
+        :return: Строка в формате JSON.
+        """
+
+    def to_json(self, data) -> str:
         # Проверяем, если data пустое или None
         if not data:
             return json.dumps({"error": "No data found"})
@@ -21,25 +26,14 @@ class JsonFormater:
 
         # Если это словарь или ошибка, возвращаем его напрямую
         return json.dumps(data)
-        # # Если данные пустые или None, возвращаем сообщение об отсутствии данных
-        # if self.is_exchange_rates(data[0]):  # Нужна нормальная проверка
-        #     print(data, type(data))
-        #     result = self.make_rates_dict(data)
-        #     return json.dumps(result, indent=4)
-        # elif isinstance(data, list):
-        #     result = self.make_currency_dict(data)
-        #     return json.dumps(result, indent=4)
-        # else:
-        #     # Если это словарь или ошибка, возвращаем его напрямую
-        #     return json.dumps(data)
 
     @staticmethod
-    def is_exchange_rates(item):
+    def is_exchange_rates(item: list) -> bool:
         """Проверяет, является ли запись о курсе валют"""
         return len(item) == 10 and isinstance(item[9], (float, int))
 
     @staticmethod
-    def make_currency_dict(data):
+    def make_currency_dict(data: list) -> list:
         result = []
         for row in data:
             result.append({
@@ -51,7 +45,7 @@ class JsonFormater:
         return result
 
     @staticmethod
-    def make_rates_dict(data):
+    def make_rates_dict(data: list) -> list:
         result = []
         for row in data:
             result.append({
