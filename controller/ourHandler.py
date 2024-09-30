@@ -47,6 +47,13 @@ class OurHandler(BaseHTTPRequestHandler):
                 PostHandler.add_currency(self, post_data)
             except sqlite3.OperationalError:
                 ResponseHandler.server_error_500(self)
+        elif self.path == '/exchangeRates':
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            try:
+                PostHandler.add_exchange_rates(self, post_data)
+            except sqlite3.OperationalError:
+                ResponseHandler.server_error_500(self)
         else:
             ResponseHandler.page_not_found_400(self)
 

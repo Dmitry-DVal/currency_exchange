@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 from model.currencyRepository import CurrencyRepository
+from model.exchangeRatesRepository import ExchangeRatesRepository
 from controller.responseHandler import ResponseHandler
 import sqlite3
 
@@ -10,12 +11,12 @@ class PostHandler:
     @staticmethod
     def add_currency(handler: BaseHTTPRequestHandler, data: str):
         """Добавляет валюту в БД"""
-        request_dict = PostHandler.covert_to_dict(data)
-        if not PostHandler.check_fields(request_dict):
+        request_dict = PostHandler.convert_currency_to_dict(data)
+        if not PostHandler.check_currency_fields(request_dict):
             ResponseHandler.bad_request_400(handler)
             return
         if CurrencyRepository(request_dict['code']).currency_exists():
-            ResponseHandler.currency_already_exists_409(handler)
+            ResponseHandler.already_exists_409(handler)
             return
         else:
             try:
@@ -24,7 +25,7 @@ class PostHandler:
                 ResponseHandler.bad_request_400(handler, 'Check field, name=str; code=str, len=3; sign=str;')
 
     @staticmethod
-    def covert_to_dict(data: str) -> dict:
+    def convert_currency_to_dict(data: str) -> dict:
         """Форматирует полученный запрос в словарь"""
         result = {}
         for i in data.split('&'):
@@ -32,7 +33,7 @@ class PostHandler:
         return result
 
     @staticmethod
-    def check_fields(your_dict: dict) -> bool:
+    def check_currency_fields(your_dict: dict) -> bool:
         """Проверяет что все необходимые поля присутствуют в запросе"""
         response = []
         for i in ['name', 'code', 'sign']:
@@ -44,3 +45,53 @@ class PostHandler:
         CurrencyRepository(request_dict['code']).add_currency(request_dict)
         currency = CurrencyRepository(request_dict['code']).get_currency()
         ResponseHandler.good_request_200(handler, currency)
+
+    @staticmethod
+    def add_exchange_rates(handler: BaseHTTPRequestHandler, data: str):
+        exchange_rates_dict = PostHandler.convert_exchange_rates_to_dict(data)
+        if not PostHandler.check_exchange_rates_fields(exchange_rates_dict):
+            ResponseHandler.bad_request_400(handler)
+            return
+        if ExchangeRatesRepository().exchange_rates_exists(
+                exchange_rates_dict):  # Если обменный курс есть, вернуть ошибку 409
+            ResponseHandler.already_exists_409(handler, 'Exchange rate for this currencies already exists')
+            return
+        else:
+            try:
+                PostHandler.add_exchange_rates_to_db(handler, exchange_rates_dict)
+            except sqlite3.IntegrityError:
+                ResponseHandler.bad_request_400(handler, 'Check field; code=str, len=3;')
+
+    @staticmethod
+    def convert_exchange_rates_to_dict(data: str) -> dict:
+        """Форматирует полученный запрос в словарь"""
+        result = {}
+        for i in data.split('&'):
+            result[i.split('=')[0]] = i.split('=')[1]
+        print(result)  # проверка как выглядит словарь
+        return result
+
+    @staticmethod
+    def check_exchange_rates_fields(your_dict: dict) -> bool:
+        """Проверяет что все необходимые поля присутствуют в запросе"""
+        required_fields = ['baseCurrencyCode', 'targetCurrencyCode', 'rate']
+
+        # Проверяем наличие всех полей
+        if not all(field in your_dict for field in required_fields):
+            return False
+        # Преобразуем rate в число и проверяем, что это положительное число
+        try:
+            rate = float(your_dict['rate'])
+            if rate <= 0:
+                return False
+        except ValueError:
+            return False
+
+        return True
+
+    @staticmethod
+    def add_exchange_rates_to_db(handler: BaseHTTPRequestHandler, request_dict: dict):
+        ExchangeRatesRepository().add_exchange_rate(request_dict)
+        exchange_rate = ExchangeRatesRepository().get_exchange_rate(request_dict['baseCurrencyCode'],
+                                                                    request_dict['targetCurrencyCode'])
+        ResponseHandler.good_request_200(handler, exchange_rate)
