@@ -52,9 +52,14 @@ class PostHandler:
         if not PostHandler.check_exchange_rates_fields(exchange_rates_dict):
             ResponseHandler.bad_request_400(handler)
             return
-        if ExchangeRatesRepository().exchange_rates_exists(
+        elif ExchangeRatesRepository().exchange_rates_exists(
                 exchange_rates_dict):  # Если обменный курс есть, вернуть ошибку 409
             ResponseHandler.already_exists_409(handler, 'Exchange rate for this currencies already exists')
+            return
+        elif not CurrencyRepository(
+                exchange_rates_dict['baseCurrencyCode']).currency_exists() or not CurrencyRepository(
+                exchange_rates_dict['targetCurrencyCode']).currency_exists():
+            ResponseHandler.bad_request_400(handler, 'One or both currencies are not in the database')
             return
         else:
             try:
@@ -68,7 +73,6 @@ class PostHandler:
         result = {}
         for i in data.split('&'):
             result[i.split('=')[0]] = i.split('=')[1]
-        print(result)  # проверка как выглядит словарь
         return result
 
     @staticmethod
