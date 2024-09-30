@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler
 from controller.getHandler import GetHandler
 from controller.postHandler import PostHandler
 from controller.responseHandler import ResponseHandler
+from controller.patchHandler import PatchHandler
 
 
 # Код с обработкой исключений повторяется, можно отлавливать исключение при попытке подключения к БД
@@ -52,6 +53,17 @@ class OurHandler(BaseHTTPRequestHandler):
             post_data = self.rfile.read(content_length).decode('utf-8')
             try:
                 PostHandler.add_exchange_rates(self, post_data)
+            except sqlite3.OperationalError:
+                ResponseHandler.server_error_500(self)
+        else:
+            ResponseHandler.page_not_found_400(self)
+
+    def do_PATCH(self):
+        """Обработчик PATCH запросов"""
+        if self.path.startswith('/exchangeRate'):
+            base_currency_code, target_currency_code = self.path.split('/')[-1][:3], self.path.split('/')[-1][3:]
+            try:
+                PatchHandler.patch_exchange_rate(self, base_currency_code, target_currency_code)
             except sqlite3.OperationalError:
                 ResponseHandler.server_error_500(self)
         else:

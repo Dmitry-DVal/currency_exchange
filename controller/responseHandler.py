@@ -4,7 +4,7 @@ from view.jsonFormater import JsonFormater
 
 
 class ResponseHandler:
-
+    """Обработчик ошибок"""
     @staticmethod
     def good_request_200(handler: BaseHTTPRequestHandler, currency: list):
         json_response = JsonFormater().to_json(currency)
@@ -16,10 +16,12 @@ class ResponseHandler:
 
     @staticmethod
     def bad_request_400(handler: BaseHTTPRequestHandler, message: str = 'Required form field is missing'):
-        handler.send_response(HTTPStatus.BAD_REQUEST)  # 400
-        handler.send_header("Content-Type", "text/html; charset=UTF-8")
+        handler.send_response(HTTPStatus.NOT_FOUND)  # 404
+        handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()
-        handler.wfile.write(f"<h1>400 {message}</h1>".encode("utf-8"))
+
+        error_response = JsonFormater().to_json({"error": message})
+        handler.wfile.write(error_response.encode("utf-8"))
 
     @staticmethod
     def page_not_found_400(handler: BaseHTTPRequestHandler):
@@ -47,11 +49,12 @@ class ResponseHandler:
         error_response = JsonFormater().to_json({"error": message})
         handler.wfile.write(error_response.encode("utf-8"))
 
-
-
     @staticmethod
-    def server_error_500(handler: BaseHTTPRequestHandler):
+    def server_error_500(handler: BaseHTTPRequestHandler,
+                         message: str = "500 Server-side error. The database is unavailable"):
         handler.send_response(HTTPStatus.INTERNAL_SERVER_ERROR)  # 500
-        handler.send_header("Content-Type", "text/html; charset=UTF-8")
+        handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()
-        handler.wfile.write("<h1>500 Server-side error. The database is unavailable/h1>".encode("utf-8"))
+
+        error_response = JsonFormater().to_json({"error": message})
+        handler.wfile.write(error_response.encode("utf-8"))
