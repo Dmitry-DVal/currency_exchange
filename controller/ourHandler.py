@@ -62,8 +62,10 @@ class OurHandler(BaseHTTPRequestHandler):
         """Обработчик PATCH запросов"""
         if self.path.startswith('/exchangeRate'):
             base_currency_code, target_currency_code = self.path.split('/')[-1][:3], self.path.split('/')[-1][3:]
+            content_length = int(self.headers['Content-Length'])
+            patch_data = self.rfile.read(content_length).decode('utf-8')
             try:
-                PatchHandler.patch_exchange_rate(self, base_currency_code, target_currency_code)
+                PatchHandler.patch_exchange_rate(self, base_currency_code, target_currency_code, patch_data)
             except sqlite3.OperationalError:
                 ResponseHandler.server_error_500(self)
         else:

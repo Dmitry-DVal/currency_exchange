@@ -63,7 +63,7 @@ WHERE base_currency_code == ? AND target_currency_code == ?""", (base_currency_c
             result = cur.fetchall()
             return result
 
-    def exchange_rates_exists(self, exchange_rates_dict):
+    def exchange_rates_exists(self, exchange_rates_dict: dict) -> bool:
         """Проверяет, существует ли валюта"""
         with sqlite3.connect(self.db_path) as con:
             cur = con.cursor()
@@ -84,8 +84,21 @@ VALUES (
   (SELECT ID FROM currencies WHERE Code = ?),
   (SELECT ID FROM currencies WHERE Code = ?),
   ?)""", (exchange_rates_dict['baseCurrencyCode'],
-                                 exchange_rates_dict['targetCurrencyCode'],
-                                 exchange_rates_dict['rate'],))
+          exchange_rates_dict['targetCurrencyCode'],
+          exchange_rates_dict['rate'],))
+
+    def update_exchange_rate(self, exchange_rates_dict):
+        """Обновляет обменный курс в БД."""
+        with sqlite3.connect(self.db_path) as con:
+            cur = con.cursor()
+            cur.execute("""UPDATE exchange_rates 
+        SET 
+            Rate = ?
+        WHERE BaseCurrencyId = (SELECT ID FROM currencies WHERE Code = ?)
+        AND TargetCurrencyId = (SELECT ID FROM currencies WHERE Code = ?)""",
+                        (exchange_rates_dict['rate'],
+                         exchange_rates_dict['baseCurrencyCode'],
+                         exchange_rates_dict['targetCurrencyCode']))
 
 
 if __name__ == '__main__':

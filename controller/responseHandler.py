@@ -16,7 +16,7 @@ class ResponseHandler:
 
     @staticmethod
     def bad_request_400(handler: BaseHTTPRequestHandler, message: str = 'Required form field is missing'):
-        handler.send_response(HTTPStatus.NOT_FOUND)  # 404
+        handler.send_response(HTTPStatus.BAD_REQUEST)  # 404
         handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()
 
@@ -42,7 +42,7 @@ class ResponseHandler:
 
     @staticmethod
     def already_exists_409(handler: BaseHTTPRequestHandler, message: str = "Currency with this code already exists"):
-        handler.send_response(HTTPStatus.NOT_FOUND)  # 409
+        handler.send_response(HTTPStatus.CONFLICT)  # 409
         handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()
 
