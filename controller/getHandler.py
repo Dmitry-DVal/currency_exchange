@@ -56,36 +56,53 @@ class GetHandler:
         exchange_dict = GetHandler.convert_exchange_to_dict(path)
         print("Вот какой словарь выходит:")
         print(exchange_dict)
+        # Проверка, что необходимые поля существуют
         if not GetHandler.check_exchange_fields(exchange_dict):
             ResponseHandler.bad_request_400(handler, 'Required form field is missing or amount is not digit')
             return
-        elif not CurrencyRepository(exchange_dict['/exchange?from']).currency_exists() or not CurrencyRepository(
+
+        # Проверка, существуют ли обе валюты
+        if not CurrencyRepository(exchange_dict['from']).currency_exists() or not CurrencyRepository(
                 exchange_dict['to']).currency_exists():
             ResponseHandler.currency_not_found(handler, 'One or both currencies are not in the database')
             return
-        elif False: # Есть прямой курс: # Похоже на запрос GET exchangeRate/USDRUB
-            pass
-        elif False: # Есть обратный курс: # GET exchangeRate/USDRUB
-            pass
-        elif False: # Есть курс через доллар: Можно пробовать на RUB GEL
-            pass
+
+        # Три сценария получения обменного курса
+        # Есть прямой курс: AB
+        # http://localhost:8000//exchange?from=USD&to=RUB&amount=10
+        if ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': exchange_dict['from'],
+                                                            'targetCurrencyCode': exchange_dict['to']}):
+            print(f'Есть прямой курс для {exchange_dict["from"], exchange_dict["to"]}')
+        # Есть обратный курс:
+        # http://localhost:8000//exchange?from=RUB&to=USD&amount=10
+        elif ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': exchange_dict['to'],
+                                                              'targetCurrencyCode': exchange_dict['from']}):
+            print(f'Прямого курс для {exchange_dict["from"], exchange_dict["to"]} - нет')
+            print(f'Есть курс для {exchange_dict["to"], exchange_dict["from"]}')
+        # Есть курс через доллар
+        # http://localhost:8000//exchange?from=GEL&to=RUB&amount=10
+        elif (ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': 'USD',
+                                                              'targetCurrencyCode': exchange_dict['from']})
+              and ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': 'USD',
+                                                                   'targetCurrencyCode': exchange_dict['to']})):
+            print(f'Прямого и обратного курсов для {exchange_dict["from"], exchange_dict["to"]} - нет')
+            print(f'Есть курс для USD-{exchange_dict["from"]} и USD-{exchange_dict["to"]}')
         else:
             ResponseHandler.currency_not_found(handler)
 
-
-
     @staticmethod
-    def convert_exchange_to_dict(data: str):
+    def convert_exchange_to_dict(data: str) -> dict:
         """Форматирует полученный запрос в словарь"""
         result = {}
         for i in data.split('&'):
-            result[i.split('=')[0]] = i.split('=')[1]
+            key, value = i.split('=')
+            result[key.replace('/exchange?', '')] = value
         return result
 
     @staticmethod
     def check_exchange_fields(your_dict: dict) -> bool:
         """Проверяет что все необходимые поля присутствуют в запросе"""
-        required_fields = ['/exchange?from', 'to', 'amount']
+        required_fields = ['from', 'to', 'amount']
         # Проверяем наличие всех полей
         if not all(field in your_dict for field in required_fields):
             return False
