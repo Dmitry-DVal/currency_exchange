@@ -6,8 +6,6 @@ from controller.responseHandler import ResponseHandler
 from controller.patchHandler import PatchHandler
 
 
-# Код с обработкой исключений повторяется, можно отлавливать исключение при попытке подключения к БД
-
 class OurHandler(BaseHTTPRequestHandler):
     """Главный обработчик запросов, распределяет запросы, выдает ошибку если такой страницы не существует"""
 

@@ -13,7 +13,26 @@ REST API для описания валют и обменных курсов. П
 ### Мотивация проекта
 - Знакомство с MVC
 - REST API - правильное именование ресурсов, использование HTTP кодов ответа
-- SQL - базовый синтаксис, создание таблиц. 
+- SQL - базовый синтаксис, создание и изменение таблиц. 
+
+
+Для запуска приложения - запустить app.py
+
+### Пример возможных запросов 
+#### корректный POST запрос на добавление валюты в curl
+curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=ALL&sign=L" -H "Content-Type: application/x-www-form-urlencoded"
+- GET /currencies
+- GET /currency/EUR
+- POST /currencies
+- GET /exchangeRates
+- GET /exchangeRate/USDRUB
+- POST /exchangeRates
+- PATCH /exchangeRate/USDRUB
+- GET /exchange?from=BASE_CURRENCY_CODE&to=TARGET_CURRENCY_CODE&amount=$AMOUNT
+
+(Подробную информацию по составлению запросов см в ссылке с информацией)
+
+
 
 ### Автор
 Дмитрий Валюженич
