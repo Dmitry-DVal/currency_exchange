@@ -37,8 +37,6 @@ class OurHandler(BaseHTTPRequestHandler):
             except sqlite3.OperationalError:
                 ResponseHandler.server_error_500(self)
         elif self.path.startswith('/exchange?from='):
-            print("I'm working on it")
-            print(self.path, type(self.path))
             try:
                 GetHandler.get_exchange(self, self.path)
             except sqlite3.OperationalError:

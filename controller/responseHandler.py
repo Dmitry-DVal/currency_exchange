@@ -5,9 +5,21 @@ from view.jsonFormater import JsonFormater
 
 class ResponseHandler:
     """Обработчик ошибок"""
+
     @staticmethod
     def good_request_200(handler: BaseHTTPRequestHandler, currency: list):
         json_response = JsonFormater().to_json(currency)
+        handler.send_response(HTTPStatus.OK)  # 200
+        handler.send_header("Content-Type", "application/json; charset=UTF-8")
+        handler.end_headers()
+
+        handler.wfile.write(json_response.encode("utf-8"))
+
+    @staticmethod
+    def good_transfer_currency_request_200(handler: BaseHTTPRequestHandler, exchange_rate: list, amount: float, rate: float):
+
+        json_response = JsonFormater().transfer_currency_to_json(exchange_rate, amount, rate)
+
         handler.send_response(HTTPStatus.OK)  # 200
         handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()

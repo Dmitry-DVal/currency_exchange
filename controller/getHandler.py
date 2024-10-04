@@ -54,8 +54,6 @@ class GetHandler:
     @staticmethod
     def get_exchange(handler: BaseHTTPRequestHandler, path: str):
         exchange_dict = GetHandler.convert_exchange_to_dict(path)
-        print("Вот какой словарь выходит:")
-        print(exchange_dict)
         # Проверка, что необходимые поля существуют
         if not GetHandler.check_exchange_fields(exchange_dict):
             ResponseHandler.bad_request_400(handler, 'Required form field is missing or amount is not digit')
@@ -67,26 +65,28 @@ class GetHandler:
             ResponseHandler.currency_not_found(handler, 'One or both currencies are not in the database')
             return
 
-        # Три сценария получения обменного курса
-        # Есть прямой курс: AB
-        # http://localhost:8000//exchange?from=USD&to=RUB&amount=10
+        # Три сценария получения обменного курса. Есть прямой курс: AB
         if ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': exchange_dict['from'],
                                                             'targetCurrencyCode': exchange_dict['to']}):
-            print(f'Есть прямой курс для {exchange_dict["from"], exchange_dict["to"]}')
+            exchange_rate = ExchangeRatesRepository().get_exchange_rate(exchange_dict['from'], exchange_dict['to'])
+            rate = exchange_rate[0][9]
+            ResponseHandler.good_transfer_currency_request_200(handler, exchange_rate, exchange_dict['amount'], rate)
         # Есть обратный курс:
-        # http://localhost:8000//exchange?from=RUB&to=USD&amount=10
         elif ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': exchange_dict['to'],
                                                               'targetCurrencyCode': exchange_dict['from']}):
-            print(f'Прямого курс для {exchange_dict["from"], exchange_dict["to"]} - нет')
-            print(f'Есть курс для {exchange_dict["to"], exchange_dict["from"]}')
+            exchange_rate = ExchangeRatesRepository().get_exchange_rate(exchange_dict['to'], exchange_dict['from'])
+            rate = 1 / exchange_rate[0][9]
+            ResponseHandler.good_transfer_currency_request_200(handler, exchange_rate, exchange_dict['amount'], rate)
         # Есть курс через доллар
-        # http://localhost:8000//exchange?from=GEL&to=RUB&amount=10
         elif (ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': 'USD',
-                                                              'targetCurrencyCode': exchange_dict['from']})
+                                                               'targetCurrencyCode': exchange_dict['from']})
               and ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': 'USD',
                                                                    'targetCurrencyCode': exchange_dict['to']})):
-            print(f'Прямого и обратного курсов для {exchange_dict["from"], exchange_dict["to"]} - нет')
-            print(f'Есть курс для USD-{exchange_dict["from"]} и USD-{exchange_dict["to"]}')
+            exchange_rate_USD_A = ExchangeRatesRepository().get_exchange_rate('USD', exchange_dict['from'])
+            exchange_rate_USD_B = ExchangeRatesRepository().get_exchange_rate('USD', exchange_dict['to'])
+            rate = exchange_rate_USD_B[0][9] / exchange_rate_USD_A[0][9]
+            exchange_rate = [[0] + list(exchange_rate_USD_A[0][5:-1]) + list(exchange_rate_USD_B[0][5:-1])]
+            ResponseHandler.good_transfer_currency_request_200(handler, exchange_rate, exchange_dict['amount'], rate)
         else:
             ResponseHandler.currency_not_found(handler)
 

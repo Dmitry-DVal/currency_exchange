@@ -5,7 +5,7 @@ class JsonFormater:
     """
         Преобразует данные в JSON-строку.
 
-        :param data: Данные для преобразования в json, могут быть списком, словарем или None.
+        :param: Данные для преобразования в json, могут быть списком, словарем или None.
         :return: Строка в формате JSON.
         """
 
@@ -26,6 +26,29 @@ class JsonFormater:
 
         # Если это словарь или ошибка, возвращаем его напрямую
         return json.dumps(data)
+
+    def transfer_currency_to_json(self, exchange_rate: list, amount: float, rate: float) -> str:
+        result = []
+        for row in exchange_rate:
+            result.append({
+                "baseCurrency": {
+                    "id": row[1],
+                    "name": row[2],
+                    "code": row[3],
+                    "sign": row[4]
+                },
+                "targetCurrency": {
+                    "id": row[5],
+                    "name": row[6],
+                    "code": row[7],
+                    "sign": row[8]
+                },
+                "rate": rate,
+                "amount": amount,
+                "convertedAmount": rate * float(amount)
+
+            })
+        return json.dumps(result, indent=4)
 
     @staticmethod
     def is_exchange_rates(item: list) -> bool:
