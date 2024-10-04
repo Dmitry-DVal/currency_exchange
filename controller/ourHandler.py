@@ -9,68 +9,54 @@ from controller.patchHandler import PatchHandler
 class OurHandler(BaseHTTPRequestHandler):
     """Главный обработчик запросов, распределяет запросы, выдает ошибку если такой страницы не существует"""
 
+    def handle_db_errors(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except sqlite3.OperationalError:
+                ResponseHandler.server_error_500(args[0])  # передаем handler
+        return wrapper
+
+    @handle_db_errors()
     def do_GET(self):
         """Обработчик GET запросов"""
         if self.path == '/currencies':
-            try:
-                GetHandler.get_currencies(self)
-            except sqlite3.OperationalError:
-                ResponseHandler.server_error_500(self)
+            GetHandler.get_currencies(self)
         elif self.path.startswith('/currency/'):
-            # Извлечение кода валюты из пути
             currency_code = self.path.split('/')[-1]
-            try:
-                GetHandler.get_currency(self, currency_code)
-            except sqlite3.OperationalError:
-                ResponseHandler.server_error_500(self)
+            GetHandler.get_currency(self, currency_code)
         elif self.path == '/exchangeRates':
-            try:
-                GetHandler.get_exchange_rates(self)
-            except sqlite3.OperationalError:
-                ResponseHandler.server_error_500(self)
+            GetHandler.get_exchange_rates(self)
         elif self.path.startswith('/exchangeRate/'):
             base_currency_code, target_currency_code = self.path.split('/')[-1][:3], self.path.split('/')[-1][3:]
-            try:
-                GetHandler.get_exchange_rate(self, base_currency_code, target_currency_code)
-            except sqlite3.OperationalError:
-                ResponseHandler.server_error_500(self)
+            GetHandler.get_exchange_rate(self, base_currency_code, target_currency_code)
         elif self.path.startswith('/exchange?from='):
-            try:
-                GetHandler.get_exchange(self, self.path)
-            except sqlite3.OperationalError:
-                ResponseHandler.server_error_500(self)
+            GetHandler.get_exchange(self, self.path)
         else:
             ResponseHandler.page_not_found_400(self)
 
+    @handle_db_errors()
     def do_POST(self):
         """Обработчик POST запросов"""
         if self.path == '/currencies':
             content_length = int(self.headers['Content-Length'])  # Получаем длину содержимого
             post_data = self.rfile.read(content_length).decode('utf-8')  # Читаем и декодируем данные
-            try:
-                PostHandler.add_currency(self, post_data)
-            except sqlite3.OperationalError:
-                ResponseHandler.server_error_500(self)
+            PostHandler.add_currency(self, post_data)
         elif self.path == '/exchangeRates':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
-            try:
-                PostHandler.add_exchange_rates(self, post_data)
-            except sqlite3.OperationalError:
-                ResponseHandler.server_error_500(self)
+            PostHandler.add_exchange_rates(self, post_data)
         else:
             ResponseHandler.page_not_found_400(self)
 
+    @handle_db_errors()
     def do_PATCH(self):
         """Обработчик PATCH запросов"""
         if self.path.startswith('/exchangeRate'):
             base_currency_code, target_currency_code = self.path.split('/')[-1][:3], self.path.split('/')[-1][3:]
             content_length = int(self.headers['Content-Length'])
             patch_data = self.rfile.read(content_length).decode('utf-8')
-            try:
-                PatchHandler.patch_exchange_rate(self, base_currency_code, target_currency_code, patch_data)
-            except sqlite3.OperationalError:
-                ResponseHandler.server_error_500(self)
+            PatchHandler.patch_exchange_rate(self, base_currency_code, target_currency_code, patch_data)
         else:
             ResponseHandler.page_not_found_400(self)
 
