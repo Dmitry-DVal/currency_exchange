@@ -17,7 +17,7 @@ class OurHandler(BaseHTTPRequestHandler):
                 ResponseHandler.server_error_500(args[0])  # передаем handler
         return wrapper
 
-    @handle_db_errors()
+    @handle_db_errors
     def do_GET(self):
         """Обработчик GET запросов"""
         if self.path == '/currencies':
@@ -35,7 +35,7 @@ class OurHandler(BaseHTTPRequestHandler):
         else:
             ResponseHandler.page_not_found_400(self)
 
-    @handle_db_errors()
+    @handle_db_errors
     def do_POST(self):
         """Обработчик POST запросов"""
         if self.path == '/currencies':
@@ -49,7 +49,7 @@ class OurHandler(BaseHTTPRequestHandler):
         else:
             ResponseHandler.page_not_found_400(self)
 
-    @handle_db_errors()
+    @handle_db_errors
     def do_PATCH(self):
         """Обработчик PATCH запросов"""
         if self.path.startswith('/exchangeRate'):

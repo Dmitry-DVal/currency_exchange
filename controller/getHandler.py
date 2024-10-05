@@ -37,6 +37,7 @@ class GetHandler:
         base_currency = CurrencyRepository(base_currency_code).get_currency()
         target_currency = CurrencyRepository(target_currency_code).get_currency()
 
+        # Если обе волюты существуют
         if base_currency and target_currency:
             try:
                 exchange_rate = ExchangeRatesRepository().get_exchange_rate(base_currency_code, target_currency_code)
@@ -71,17 +72,18 @@ class GetHandler:
             exchange_rate = ExchangeRatesRepository().get_exchange_rate(exchange_dict['from'], exchange_dict['to'])
             rate = exchange_rate[0][9]
             ResponseHandler.good_transfer_currency_request_200(handler, exchange_rate, exchange_dict['amount'], rate)
-        # Есть обратный курс:
+        # Есть обратный курс: BA
         elif ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': exchange_dict['to'],
                                                               'targetCurrencyCode': exchange_dict['from']}):
             exchange_rate = ExchangeRatesRepository().get_exchange_rate(exchange_dict['to'], exchange_dict['from'])
             rate = 1 / exchange_rate[0][9]
             ResponseHandler.good_transfer_currency_request_200(handler, exchange_rate, exchange_dict['amount'], rate)
-        # Есть курс через доллар
-        elif (ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': 'USD',
-                                                               'targetCurrencyCode': exchange_dict['from']})
-              and ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': 'USD',
-                                                                   'targetCurrencyCode': exchange_dict['to']})):
+        # Есть курс через доллар. USD-A: USD-B
+        elif all([
+            ExchangeRatesRepository().exchange_rates_exists(
+                {'baseCurrencyCode': 'USD', 'targetCurrencyCode': exchange_dict['from']}),
+            ExchangeRatesRepository().exchange_rates_exists(
+                {'baseCurrencyCode': 'USD', 'targetCurrencyCode': exchange_dict['to']})]):
             exchange_rate_USD_A = ExchangeRatesRepository().get_exchange_rate('USD', exchange_dict['from'])
             exchange_rate_USD_B = ExchangeRatesRepository().get_exchange_rate('USD', exchange_dict['to'])
             rate = exchange_rate_USD_B[0][9] / exchange_rate_USD_A[0][9]
