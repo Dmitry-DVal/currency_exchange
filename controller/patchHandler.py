@@ -40,7 +40,7 @@ class PatchHandler:
 
     @staticmethod
     def update_exchange_rates_to_db(handler: BaseHTTPRequestHandler, request_dict: dict):
-        ExchangeRatesRepository().update_exchange_rate(request_dict)
+        ExchangeRatesRepository().update_exchange_rate(request_dict) # Стоит ли создать переменную для ЭК и зачем если да?
         exchange_rate = ExchangeRatesRepository().get_exchange_rate(request_dict['baseCurrencyCode'],
                                                                     request_dict['targetCurrencyCode'])
         ResponseHandler.good_request_200(handler, exchange_rate)

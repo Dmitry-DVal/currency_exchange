@@ -19,7 +19,7 @@ class CurrencyRepository:
             result = cur.fetchall()
             return result
 
-    def currency_exists(self):
+    def currency_exists(self) -> bool:
         """Проверяет, существует ли валюта"""
         with sqlite3.connect(self.db_path) as con:
             cur = con.cursor()

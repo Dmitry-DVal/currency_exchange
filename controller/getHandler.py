@@ -1,5 +1,5 @@
 from http.server import BaseHTTPRequestHandler
-from model.currenciesRepository import CureenciesRepository
+from model.currenciesRepository import CurrenciesRepository
 from model.currencyRepository import CurrencyRepository
 from model.exchangeRatesRepository import ExchangeRatesRepository
 from controller.responseHandler import ResponseHandler
@@ -11,7 +11,7 @@ class GetHandler:
     @staticmethod
     def get_currencies(handler: BaseHTTPRequestHandler):
         """Отправляет клиенту список всех валют"""
-        currencies = CureenciesRepository().get_cureencies()
+        currencies = CurrenciesRepository().get_cureencies()
         ResponseHandler.good_request_200(handler, currencies)
 
     @staticmethod
@@ -59,13 +59,11 @@ class GetHandler:
         if not GetHandler.check_exchange_fields(exchange_dict):
             ResponseHandler.bad_request_400(handler, 'Required form field is missing or amount is not digit')
             return
-
         # Проверка, существуют ли обе валюты
         if not CurrencyRepository(exchange_dict['from']).currency_exists() or not CurrencyRepository(
                 exchange_dict['to']).currency_exists():
             ResponseHandler.currency_not_found(handler, 'One or both currencies are not in the database')
             return
-
         # Три сценария получения обменного курса. Есть прямой курс: AB
         if ExchangeRatesRepository().exchange_rates_exists({'baseCurrencyCode': exchange_dict['from'],
                                                             'targetCurrencyCode': exchange_dict['to']}):

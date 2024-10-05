@@ -35,10 +35,8 @@ class PostHandler:
     @staticmethod
     def check_currency_fields(your_dict: dict) -> bool:
         """Проверяет что все необходимые поля присутствуют в запросе"""
-        response = []
-        for i in ['name', 'code', 'sign']:
-            response.append(i in your_dict)
-        return all(response)
+        required_fields = ['name', 'code', 'sign']
+        return all(field in your_dict for field in required_fields)
 
     @staticmethod
     def add_currency_to_db(handler: BaseHTTPRequestHandler, request_dict: dict):
@@ -58,7 +56,7 @@ class PostHandler:
             return
         elif not CurrencyRepository(
                 exchange_rates_dict['baseCurrencyCode']).currency_exists() or not CurrencyRepository(
-                exchange_rates_dict['targetCurrencyCode']).currency_exists():
+            exchange_rates_dict['targetCurrencyCode']).currency_exists():
             ResponseHandler.bad_request_400(handler, 'One or both currencies are not in the database')
             return
         else:
@@ -86,12 +84,9 @@ class PostHandler:
         # Преобразуем rate в число и проверяем, что это положительное число
         try:
             rate = float(your_dict['rate'])
-            if rate <= 0:
-                return False
-        except ValueError:
+            return rate > 0
+        except (ValueError, TypeError):
             return False
-
-        return True
 
     @staticmethod
     def add_exchange_rates_to_db(handler: BaseHTTPRequestHandler, request_dict: dict):

@@ -2,10 +2,10 @@ import sqlite3
 import os
 
 
-class CureenciesRepository:
+class CurrenciesRepository:
     """Класс обращается к БД и получить список всех валют"""
 
-    def get_cureencies(self):
+    def get_cureencies(self) -> list:
         # Построение пути к базе данных относительно текущего файла
         db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
         with sqlite3.connect(db_path) as con:
