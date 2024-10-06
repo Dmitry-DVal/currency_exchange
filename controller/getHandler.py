@@ -108,8 +108,10 @@ class GetHandler:
             return False
         # Преобразуем amount в число и проверяем, что это положительное число
         try:
-            rate = float(your_dict['amount'])
-            if rate <= 0:
+            your_dict['amount'] = float(your_dict['amount'])
+            # rate = float(your_dict['amount'])
+            # if rate <= 0:
+            if your_dict['amount'] <= 0:
                 return False
         except ValueError:
             return False

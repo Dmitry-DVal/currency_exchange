@@ -43,9 +43,9 @@ class JsonFormater:
                     "code": row[7],
                     "sign": row[8]
                 },
-                "rate": rate,
+                "rate": round(rate, 5),
                 "amount": amount,
-                "convertedAmount": rate * float(amount)
+                "convertedAmount": round(rate * amount, 5)
 
             })
         return json.dumps(result, indent=4)
