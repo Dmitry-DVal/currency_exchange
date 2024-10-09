@@ -23,7 +23,6 @@ class PatchHandler:
             except sqlite3.IntegrityError:
                 ResponseHandler.bad_request_400(handler, 'Check field; code=str, len=3;')
 
-
     @staticmethod
     def convert_rate_to_dict(data: str, base_currency_code: str, target_currency_code: str) -> dict:
         """Форматирует полученный запрос в словарь"""
@@ -40,7 +39,8 @@ class PatchHandler:
 
     @staticmethod
     def update_exchange_rates_to_db(handler: BaseHTTPRequestHandler, request_dict: dict):
-        ExchangeRatesRepository().update_exchange_rate(request_dict) # Стоит ли создать переменную для ЭК и зачем если да?
-        exchange_rate = ExchangeRatesRepository().get_exchange_rate(request_dict['baseCurrencyCode'],
-                                                                    request_dict['targetCurrencyCode'])
+        rate = ExchangeRatesRepository()
+        rate.update_exchange_rate(request_dict)  # Стоит ли создать переменную для ЭК и зачем если да?
+        exchange_rate = rate.get_exchange_rate(request_dict['baseCurrencyCode'],
+                                               request_dict['targetCurrencyCode'])
         ResponseHandler.good_request_200(handler, exchange_rate)

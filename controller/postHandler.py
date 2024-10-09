@@ -18,11 +18,10 @@ class PostHandler:
         if CurrencyRepository(request_dict['code']).currency_exists():
             ResponseHandler.already_exists_409(handler)
             return
-        else:
-            try:
-                PostHandler.add_currency_to_db(handler, request_dict)
-            except sqlite3.IntegrityError:
-                ResponseHandler.bad_request_400(handler, 'Check field, name=str; code=str, len=3; sign=str;')
+        try:
+            PostHandler.add_currency_to_db(handler, request_dict)
+        except sqlite3.IntegrityError:
+            ResponseHandler.bad_request_400(handler, 'Check field, name=str; code=str, len=3; sign=str;')
 
     @staticmethod
     def convert_currency_to_dict(data: str) -> dict:
@@ -59,11 +58,10 @@ class PostHandler:
             exchange_rates_dict['targetCurrencyCode']).currency_exists():
             ResponseHandler.bad_request_400(handler, 'One or both currencies are not in the database')
             return
-        else:
-            try:
-                PostHandler.add_exchange_rates_to_db(handler, exchange_rates_dict)
-            except sqlite3.IntegrityError:
-                ResponseHandler.bad_request_400(handler, 'Check field; code=str, len=3;')
+        try:
+            PostHandler.add_exchange_rates_to_db(handler, exchange_rates_dict)
+        except sqlite3.IntegrityError:
+            ResponseHandler.bad_request_400(handler, 'Check field; code=str, len=3;')
 
     @staticmethod
     def convert_exchange_rates_to_dict(data: str) -> dict:
