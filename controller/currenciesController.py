@@ -3,6 +3,7 @@ from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
 from service.currenciesService import CurrenciesService
 import urllib.parse
 from controller.response import Response
+from controller.validator import Validator
 
 
 class CurrenciesController:
@@ -16,11 +17,16 @@ class CurrenciesController:
 
         # Преобразуем строку в словарь
         data = urllib.parse.parse_qs(post_data)  # {'name': ['Mavrod'], 'code': ['MYR'], 'sign': ['M']}
-        if not CurrenciesController.check_currency_fields(data):
+        if not Validator().check_currency_fields(data):
             handler.send_response(400)
             handler.end_headers()
             handler.wfile.write(b"400 The required form field is missing")
             return
+        # if not CurrenciesController.check_currency_fields(data):
+        #     handler.send_response(400)
+        #     handler.end_headers()
+        #     handler.wfile.write(b"400 The required form field is missing")
+        #     return
         currency_dto = CurrencyRegistrationDTO(data.get('name')[0], data.get('code')[0], data.get('sign')[0])
         service = CurrenciesService(currency_dto)
         response = service.add_currency_to_db()
