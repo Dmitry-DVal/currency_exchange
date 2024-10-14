@@ -1,0 +1,2 @@
+class currencyResponseDTO:
+    pass
