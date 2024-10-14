@@ -5,7 +5,7 @@ import os
 class CurrencyDao:
     """Класс обращается к БД и получает список конкретной валюты, добавляет валюту в БД."""
 
-    def __init__(self, currency_model):
+    def __init__(self, currency_model=None):
         self.currency_model = currency_model
         # Построение пути к базе данных относительно текущего файла
         self.db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')

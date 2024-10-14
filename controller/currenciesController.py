@@ -15,27 +15,25 @@ class CurrenciesController:
         post_data = handler.rfile.read(content_length).decode('utf-8')  # Читаем и декодируем данные
 
         # Преобразуем строку в словарь
-        data = urllib.parse.parse_qs(post_data) # {'name': ['Mavrod'], 'code': ['MYR'], 'sign': ['M']}
+        data = urllib.parse.parse_qs(post_data)  # {'name': ['Mavrod'], 'code': ['MYR'], 'sign': ['M']}
         if not CurrenciesController.check_currency_fields(data):
             handler.send_response(400)
             handler.end_headers()
             handler.wfile.write(b"400 The required form field is missing")
             return
-
-        # Создаем DTO с полученными данными
         currency_dto = CurrencyRegistrationDTO(data.get('name')[0], data.get('code')[0], data.get('sign')[0])
-
-        # Передаем DTO сервису
         service = CurrenciesService(currency_dto)
         response = service.add_currency_to_db()
-
-        # Направляем ответ клиенту
         if 'message' in response:
             Response.currency_code_exists(handler)
         else:
             Response.good_request_200(handler, response)
 
-
+    @staticmethod
+    def handle_get(handler: BaseHTTPRequestHandler):
+        # Я думаю тут можно обойтись без слоя сервис, хотя и в пост можно было бы, но тут вобще нет смысла
+        response = CurrenciesService.get_currencies()
+        Response.good_request_200(handler, response)
 
     @staticmethod
     def check_currency_fields(data: dict) -> bool:

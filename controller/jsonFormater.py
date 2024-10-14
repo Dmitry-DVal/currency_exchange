@@ -11,4 +11,3 @@ class JsonFormater:
 
     def to_json(self, data) -> str:
         return json.dumps(data, indent=4)
-

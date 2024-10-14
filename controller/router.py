@@ -12,6 +12,13 @@ class Router(BaseHTTPRequestHandler):
         else:
             self.send_page_not_found()
 
+    def do_GET(self):
+        """Обработчик GET запросов"""
+        if self.path == "/currencies":
+            CurrenciesController.handle_get(self)
+        else:
+            self.send_page_not_found()
+
     def send_page_not_found(self):
         self.send_response(404)
         self.end_headers()

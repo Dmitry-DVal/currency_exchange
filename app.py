@@ -1,5 +1,4 @@
 from http.server import HTTPServer
-# from controller.ourHandler import OurHandler
 from controller.router import Router
 
 port = 8000
