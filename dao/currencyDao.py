@@ -1,4 +1,3 @@
-import sqlite3
 import os
 from myExceptions import *
 
@@ -13,39 +12,32 @@ class CurrencyDao:
 
     def get_currency(self):
         """Получает информацию по конкретной валюте из БД."""
-        try:
-            with sqlite3.connect(self.db_path) as con:
-                cur = con.cursor()
-                cur.execute("SELECT ID, Fullname, Code, Sign FROM currencies WHERE Code = ?",
-                            (self.currency_model.code,))
-                result = cur.fetchall()
-                self.currency_model.id = result[0][0]
-                return self.currency_model
-        except sqlite3.OperationalError:
-            raise DatabaseUnavailableError("Database unavailable")
+        query = "SELECT ID, Fullname, Code, Sign FROM currencies WHERE Code = ?"
+        result = self._execute_query(query, (self.currency_model.code,))
+        self.currency_model.id = result[0][0]
+        return self.currency_model
 
     def add_currency(self):
         """Добавляет валюту в БД"""
-        try:
-            with sqlite3.connect(self.db_path) as con:
-                cur = con.cursor()
-                cur.execute("INSERT INTO currencies (Code, Fullname, Sign) VALUES (?, ?, ?)",
-                            (self.currency_model.code, self.currency_model.name, self.currency_model.sign))
-                con.commit()  # Сохраняем изменения в базе данных
-            self.get_currency()
-        except sqlite3.IntegrityError:
-            raise CurrencyCodeError("Currency code is not unique or does not match the format")
-        except sqlite3.OperationalError:
-            raise DatabaseUnavailableError("Database unavailable")
+        query = "INSERT INTO currencies (Code, Fullname, Sign) VALUES (?, ?, ?)"
+        self._execute_query(query, (self.currency_model.code, self.currency_model.name, self.currency_model.sign))
+        self.get_currency()
 
     def get_currencies(self) -> list:
         """Получает всю информацию из таблицы currencies"""
+        query = "SELECT * FROM currencies"
+        return self._execute_query(query)
+
+    def _execute_query(self, query, params=()):
         try:
             with sqlite3.connect(self.db_path) as con:
                 cur = con.cursor()
-
-                cur.execute("SELECT * FROM currencies")
-                result = cur.fetchall()
-                return result
+                if params:
+                    cur.execute(query, params)
+                else:
+                    cur.execute(query)
+                return cur.fetchall()
+        except sqlite3.IntegrityError:
+            raise CurrencyCodeError("Currency code is not unique or does not match the format")
         except sqlite3.OperationalError:
             raise DatabaseUnavailableError("Database unavailable")

@@ -13,7 +13,6 @@ class CurrenciesService:
         currency_model = self.make_model()
         try:
             CurrencyDao(currency_model).add_currency()
-            print(currency_model, type(currency_model))
             return currency_model.__dict__
         except CurrencyCodeError as e:
             # Можно просто прокинуть исключение дальше или вернуть его в контроллер в нужном формате
