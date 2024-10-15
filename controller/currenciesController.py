@@ -18,31 +18,23 @@ class CurrenciesController:
         # Преобразуем строку в словарь
         data = urllib.parse.parse_qs(post_data)  # {'name': ['Mavrod'], 'code': ['MYR'], 'sign': ['M']}
         if not Validator().check_currency_fields(data):
-            handler.send_response(400)
-            handler.end_headers()
-            handler.wfile.write(b"400 The required form field is missing")
+            Response.send_response(handler, ['The required form field is missing'], 400)
             return
-        # if not CurrenciesController.check_currency_fields(data):
-        #     handler.send_response(400)
-        #     handler.end_headers()
-        #     handler.wfile.write(b"400 The required form field is missing")
-        #     return
+        # Создаем ДТО
         currency_dto = CurrencyRegistrationDTO(data.get('name')[0], data.get('code')[0], data.get('sign')[0])
         service = CurrenciesService(currency_dto)
         response = service.add_currency_to_db()
-        if 'message' in response:
-            Response.currency_code_exists(handler)
+        # Если в ответе ошибка — возвращаем соответствующий статус
+        if 'error' in response:
+            Response.send_response(handler, response['error'], response['error_code'])
         else:
-            Response.good_request_200(handler, response)
+            Response.send_response(handler, response, 200)
 
     @staticmethod
     def handle_get(handler: BaseHTTPRequestHandler):
         # Я думаю тут можно обойтись без слоя сервис, хотя и в пост можно было бы, но тут вобще нет смысла
         response = CurrenciesService.get_currencies()
-        Response.good_request_200(handler, response)
-
-    @staticmethod
-    def check_currency_fields(data: dict) -> bool:
-        """Проверяет что все необходимые поля присутствуют в запросе"""
-        required_fields = ['name', 'code', 'sign']
-        return all(f in data for f in required_fields)
+        if 'error' in response:
+            Response.send_response(handler, response['error'], response['error_code'])
+        else:
+            Response.send_response(handler, response, 200)
