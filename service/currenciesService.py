@@ -1,6 +1,6 @@
 from model.currencyModel import CurrencyModel
 from dao.currencyDao import CurrencyDao
-from myExceptions import *
+
 
 class CurrenciesService:
     def __init__(self, dto):
@@ -14,11 +14,8 @@ class CurrenciesService:
         try:
             CurrencyDao(currency_model).add_currency()
             return currency_model.__dict__
-        except CurrencyCodeError as e:
-            # Можно просто прокинуть исключение дальше или вернуть его в контроллер в нужном формате
-            return {'error': str(e), 'error_code': 409}
-        except DatabaseUnavailableError as e:
-            return {'error': str(e), 'error_code': 500}
+        except Exception as error:
+            raise error
 
     @classmethod
     def get_currencies(cls):
@@ -26,8 +23,18 @@ class CurrenciesService:
             result = CurrencyDao().get_currencies()
             currencies = cls.make_currencies_dict(result)
             return currencies
-        except DatabaseUnavailableError as e:
-            return {'error': str(e), 'error_code': 500}
+        except Exception as error:
+            raise error
+
+    @classmethod
+    def get_currency(cls, currency_code):
+        currency_model = CurrencyModel(None, currency_code, None)
+        try:
+            result = CurrencyDao(currency_model).get_currency()
+            currency = cls.make_currencies_dict(result)
+            return currency
+        except Exception as error:
+            raise error
 
     @staticmethod
     def make_currencies_dict(data: list) -> list:
