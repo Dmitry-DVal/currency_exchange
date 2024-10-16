@@ -29,7 +29,6 @@ class CurrenciesController(BaseController):
         except Exception as e:
             BaseController.error_handler(handler, e)
 
-
     @staticmethod
     def handle_get(handler: BaseHTTPRequestHandler):
         try:

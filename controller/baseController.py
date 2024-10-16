@@ -21,6 +21,9 @@ class BaseController:
         elif isinstance(exception, DatabaseUnavailableError):
             error_message = 'Database unavailable'
             BaseController.send_response(handler, {'message': error_message}, 500)
+        elif isinstance(exception, CurrencyNotFoundError):
+            error_message = 'Currency not found'
+            BaseController.send_response(handler, {'message': error_message}, 404)
         else:
             error_message = f'Error: {str(exception)}'
             BaseController.send_response(handler, {'message': error_message}, 400)

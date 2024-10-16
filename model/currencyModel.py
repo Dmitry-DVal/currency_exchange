@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class CurrencyModel:
-    name: str
-    code: str
-    sign: str
     id: str = None
-
+    name: str = None
+    code: str = None
+    sign: str = None

@@ -7,7 +7,7 @@ class CurrenciesService:
         self.dto = dto
 
     def make_model(self):
-        return CurrencyModel(self.dto.name, self.dto.code, self.dto.sign)  # currencyModel
+        return CurrencyModel(name=self.dto.name, code=self.dto.code, sign=self.dto.sign)  # currencyModel
 
     def add_currency_to_db(self):  # currencyDao
         currency_model = self.make_model()
@@ -28,11 +28,10 @@ class CurrenciesService:
 
     @classmethod
     def get_currency(cls, currency_code):
-        currency_model = CurrencyModel(None, currency_code, None)
+        currency_model = CurrencyModel(code=currency_code)
         try:
             result = CurrencyDao(currency_model).get_currency()
-            currency = cls.make_currencies_dict(result)
-            return currency
+            return result.__dict__
         except Exception as error:
             raise error
 
@@ -42,8 +41,8 @@ class CurrenciesService:
         for row in data:
             result.append({
                 "id": row[0],
-                "code": row[1],
-                "name": row[2],
+                "name": row[1],
+                "code": row[2],
                 "sign": row[3]
             })
         return result

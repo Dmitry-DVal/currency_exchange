@@ -9,3 +9,8 @@ class CurrencyCodeError(sqlite3.IntegrityError):
 class DatabaseUnavailableError(sqlite3.OperationalError):
     """Исключение при недоступности БД."""
     pass
+
+
+class CurrencyNotFoundError(Exception):
+    """Валюта не найдена"""
+    pass
