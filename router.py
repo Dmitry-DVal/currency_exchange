@@ -7,16 +7,12 @@ routes = {
     'POST': {
         'currencies': CurrenciesController.handle_post,
         # 'exchangeRates': ExchangeRateController.handle_post,
-        # '/currency': CurrencyController.handle_post,
-        # '/exchangeRates': ExchangeRatesController.handle_post,
-        # '/exchange': ExchangeCurrencyController.handle_post
     },
     'GET': {
         'currencies': CurrenciesController.handle_get,
         'currency': CurrencyController.handle_get,
         'exchangeRate': ExchangeRateController.handle_get,
         # '/exchangeRates': ExchangeRatesController.handle_get,
-        # '/exchangeRate': ExchangeRateController.handle_get,
         # '/exchange': ExchangeCurrencyController.handle_get
     },
     'PATCH': {
@@ -33,7 +29,7 @@ class Router(BaseHTTPRequestHandler):
         path = self.path.split('/')[1]
         handler = routes['POST'].get(path)
         if handler:
-            handler(self)
+            handler(self)  # Почему тут? Unexpected argument
         else:
             self.send_page_not_found()
 

@@ -1,26 +1,25 @@
-from dao.exchangeRateDao import ExchangeRateDao
-class ExchangeRateService:
-    @staticmethod
-    def get_exchange_rate(base_currency, target_currency):
-        # Получаем курс из базы данных
-        exchange_rate = ExchangeRateDao.get_exchange_rate(base_currency, target_currency)
-        if not exchange_rate:
-            raise CurrencyNotFoundError("Exchange rate not found")
-
-        return {
-            'id': exchange_rate.id,
-            'baseCurrency': {
-                'id': exchange_rate.base_currency_id,
-                'name': exchange_rate.base_currency_name,
-                'code': exchange_rate.base_currency_code,
-                'sign': exchange_rate.base_currency_sign
-            },
-            'targetCurrency': {
-                'id': exchange_rate.target_currency_id,
-                'name': exchange_rate.target_currency_name,
-                'code': exchange_rate.target_currency_code,
-                'sign': exchange_rate.target_currency_sign
-            },
-            'rate': exchange_rate.rate
-        }
-
+# from dao.exchangeRateDao import ExchangeRateDao
+# class ExchangeRateService:
+#     def __init__(self, dto: ExchangeRateDao):
+#         self.dto = dto
+#
+#     @classmethod
+#     def get_currencies(cls):
+#         try:
+#             result = CurrencyDao().get_currencies()
+#             currencies = cls.make_currencies_dict(result)
+#             return currencies
+#         except Exception as error:
+#             raise error
+#
+#     @staticmethod
+#     def make_currencies_dict(data: list) -> list:
+#         result = []
+#         for row in data:
+#             result.append({
+#                 "id": row[0],
+#                 "name": row[1],
+#                 "code": row[2],
+#                 "sign": row[3]
+#             })
+#         return result

@@ -3,17 +3,16 @@ from dao.currencyDao import CurrencyDao
 
 
 class CurrenciesService:
-    def __init__(self, dto):
+    def __init__(self, dto=None):
         self.dto = dto
 
     def make_model(self):
         return CurrencyModel(name=self.dto.name, code=self.dto.code, sign=self.dto.sign)  # currencyModel
 
-    @classmethod
-    def get_currencies(cls):
+    def get_currencies(self) -> dict or Exception:
         try:
             result = CurrencyDao().get_currencies()
-            currencies = cls.make_currencies_dict(result)
+            currencies = self.make_currencies_dict(result)
             return currencies
         except Exception as error:
             raise error

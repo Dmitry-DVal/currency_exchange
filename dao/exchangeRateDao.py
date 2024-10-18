@@ -17,16 +17,27 @@ class ExchangeRateDao(BaseDao):
         currency_model = self.make_exchange_rate_model_response(result)
         return currency_model
 
-
     def make_exchange_rate_model_response(self, data: list) -> ExchangeRateModel:
         if data:
             base_currency_model = self.make_currency_model_response([data[0][1:5]])
             target_currency_model = self.make_currency_model_response([data[0][5:-1]])
-            self.exchange_rate_model = ExchangeRateModel(data[0][0], base_currency_model, target_currency_model,
-                                                         data[0][9])
-            return self.exchange_rate_model
+            exchange_rate_model = ExchangeRateModel(data[0][0], base_currency_model, target_currency_model,
+                                                    data[0][9])
+            return exchange_rate_model
         else:
             raise ExchangeRateNotFoundError
+
+    def update_exchange_rate(self):
+        """Обновляет обменный курс в БД."""
+        query = SQLqueries.update_exchange_rate
+        self._execute_query(query, (self.exchange_rate.rate,
+                                    self.exchange_rate.baseCurrency.code, self.exchange_rate.targetCurrency.code))
+        query = SQLqueries.get_exchange_rate
+        result = self._execute_query(query,
+                                     (self.exchange_rate.baseCurrency.code, self.exchange_rate.targetCurrency.code))
+        currency_model = self.make_exchange_rate_model_response(result)
+        print(currency_model.to_dict(), 'Вот и обновили')
+        return currency_model
 
     def get_exchange_rates(self):
         """Получает список обменных курсов"""

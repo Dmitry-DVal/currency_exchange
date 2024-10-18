@@ -4,7 +4,6 @@ from service.currenciesService import CurrenciesService
 import urllib.parse
 from controller.validator import Validator
 from controller.baseController import BaseController
-
 from dao.currencyDao import CurrencyDao
 
 
@@ -17,8 +16,8 @@ class CurrenciesController(BaseController):
 
         data = urllib.parse.parse_qs(post_data)  # {'name': ['Mavrod'], 'code': ['MYR'], 'sign': ['M']}
 
-        if not Validator().check_currency_fields(data):
-            error_message = 'The required form field is missingt'
+        if not Validator().is_currency_fields(data):
+            error_message = 'The required form field is missing'
             BaseController.send_response(self, {'message': error_message}, 400)
             return
 
@@ -35,7 +34,7 @@ class CurrenciesController(BaseController):
     @staticmethod
     def handle_get(handler: BaseHTTPRequestHandler):
         try:
-            response = CurrenciesService.get_currencies()
+            response = CurrenciesService().get_currencies()
             BaseController.send_response(handler, response, 200)
         except Exception as e:
             BaseController.error_handler(handler, e)

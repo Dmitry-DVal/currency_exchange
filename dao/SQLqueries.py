@@ -41,3 +41,10 @@ get_exchange_rates = """SELECT
     FROM exchange_rates AS er
     JOIN currencies AS bc ON er.BaseCurrencyId = bc.ID
     JOIN currencies AS tc ON er.TargetCurrencyId = tc.ID"""
+
+
+update_exchange_rate = """UPDATE exchange_rates 
+        SET 
+            Rate = ?
+        WHERE BaseCurrencyId = (SELECT ID FROM currencies WHERE Code = ?)
+        AND TargetCurrencyId = (SELECT ID FROM currencies WHERE Code = ?)"""

@@ -2,14 +2,18 @@ from http.server import BaseHTTPRequestHandler
 from controller.baseController import BaseController
 from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
 from dao.exchangeRateDao import ExchangeRateDao
+from controller.validator import Validator
+from model.exchangeRateModel import ExchangeRateModel
+from model.currencyModel import CurrencyModel
+import urllib.parse
 
 
 class ExchangeRateController(BaseController):
     """Обработка запросов по пути '/exchangeRate"""
 
-    def handle_get(self: BaseController):
+    def handle_get(self: BaseHTTPRequestHandler):
         try:
-            path_parts = self.path.split('/')[2]  # ['', 'exchangeRate', 'RUBUSD']
+            path_parts = self.path.split('/')[2]
             base_currency_dto, target_currency_dto = (CurrencyRegistrationDTO(code=path_parts[:3]),
                                                       CurrencyRegistrationDTO(code=path_parts[3:]),)
             exchange_rate = ExchangeRateDao().get_exchange_rate(base_currency_dto.code, target_currency_dto.code)
@@ -17,10 +21,24 @@ class ExchangeRateController(BaseController):
         except Exception as e:
             BaseController.error_handler(self, e)
 
-    @staticmethod
-    def handle_patch(handler: BaseHTTPRequestHandler):  # /exchangeRate/USDRUB bode rate
-        print("I'm working on PATCH request")
-# Извлечь коды базовой валюты и целевой валюты из URL.
-# Проверить, что тело запроса содержит обновленный курс (rate).
-# Обновить запись в базе данных, если такая валютная пара существует.
-# Вернуть обновленную запись, если она успешно обновлена, или отправить ошибку, если что-то пошло не так.
+    def handle_patch(self: BaseHTTPRequestHandler):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode('utf-8')
+
+        data = urllib.parse.parse_qs(post_data)
+        if not Validator().is_exchange_rate_field(data):
+            error_message = 'The required form field is missing'
+            BaseController.send_response(self, {'message': error_message}, 400)
+            return
+
+        path_parts = self.path.split('/')[2]
+        base_currency_model, target_currency_model = (CurrencyModel(code=path_parts[:3]),
+                                                      CurrencyModel(code=path_parts[3:]),)
+        exchange_rate_dto = ExchangeRateModel(baseCurrency=base_currency_model,
+                                              targetCurrency=target_currency_model,
+                                              rate=float(data.get('rate')[0]))
+        try:
+            response = ExchangeRateDao(exchange_rate_dto).update_exchange_rate()
+            BaseController.send_response(self, response.to_dict(), 200)
+        except Exception as e:
+            BaseController.error_handler(self, e)
