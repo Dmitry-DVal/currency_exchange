@@ -7,11 +7,18 @@ class Validator:
         return all(f in data for f in required_fields)
 
     @staticmethod
+    def is_exchange_rates_fields(data: dict) -> bool:
+        """Проверяет что все необходимые поля присутствуют в запросе"""
+        required_fields = ['baseCurrencyCode', 'targetCurrencyCode', 'rate']
+        try:
+            return all(f in data for f in required_fields) and isinstance((float(data['rate'][0])), float)
+        except ValueError:
+            return False
+
+    @staticmethod
     def is_exchange_rate_field(data: dict) -> bool:
         """Проверяет что все необходимые поля присутствуют в запросе"""
         try:
             return 'rate' in data and isinstance((float(data['rate'][0])), float)
         except ValueError:
             return False
-
-

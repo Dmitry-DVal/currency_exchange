@@ -1,20 +1,17 @@
 from http.server import BaseHTTPRequestHandler
 
-from controller import CurrencyController, CurrenciesController, ExchangeRateController
-#from controller.currenciesController import CurrenciesController
-# from controller.currencyController import CurrencyController
-#from controller.exchangeRateController import ExchangeRateController
+from controller import CurrencyController, CurrenciesController, ExchangeRateController, ExchangeRatesController
 
 routes = {
     'POST': {
         'currencies': CurrenciesController.handle_post,
-        # 'exchangeRates': ExchangeRateController.handle_post,
+        'exchangeRates': ExchangeRatesController.handle_post,
     },
     'GET': {
         'currencies': CurrenciesController.handle_get,
         'currency': CurrencyController.handle_get,
         'exchangeRate': ExchangeRateController.handle_get,
-        # '/exchangeRates': ExchangeRatesController.handle_get,
+        'exchangeRates': ExchangeRatesController.handle_get,
         # '/exchange': ExchangeCurrencyController.handle_get
     },
     'PATCH': {

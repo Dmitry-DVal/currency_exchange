@@ -18,16 +18,6 @@ class ExchangeRateDao(BaseDao):
         currency_model = self.make_exchange_rate_model_response(result)
         return currency_model
 
-    def make_exchange_rate_model_response(self, data: list) -> ExchangeRateModel:
-        if data:
-            base_currency_model = self.make_currency_model_response([data[0][1:5]])
-            target_currency_model = self.make_currency_model_response([data[0][5:-1]])
-            exchange_rate_model = ExchangeRateModel(data[0][0], base_currency_model, target_currency_model,
-                                                    data[0][9])
-            return exchange_rate_model
-        else:
-            raise myExceptions.ExchangeRateNotFoundError
-
     def update_exchange_rate(self):
         """Обновляет обменный курс в БД."""
         query = SQLqueries.update_exchange_rate
@@ -39,11 +29,21 @@ class ExchangeRateDao(BaseDao):
         currency_model = self.make_exchange_rate_model_response(result)
         return currency_model
 
-    # def get_exchange_rates(self):
-    #     """Получает список обменных курсов"""
-    #     with sqlite3.connect(self.db_path) as con:
-    #         cur = con.cursor()
-    #
-    #         cur.execute(SQLqueries.get_exchange_rates)
-    #         result = cur.fetchall()
-    #         return result
+    def get_exchange_rates(self) -> list[ExchangeRateModel]:
+        """Получает список обменных курсов"""
+        query = SQLqueries.get_exchange_rates
+        result = self._execute_query(query)
+        response = []
+        for i in result:
+            response.append(self.make_exchange_rate_model_response([i]))
+        return response
+
+    def make_exchange_rate_model_response(self, data: list) -> ExchangeRateModel:
+        if data:
+            base_currency_model = self.make_currency_model_response([data[0][1:5]])
+            target_currency_model = self.make_currency_model_response([data[0][5:-1]])
+            exchange_rate_model = ExchangeRateModel(data[0][0], base_currency_model, target_currency_model,
+                                                    data[0][9])
+            return exchange_rate_model
+        else:
+            raise myExceptions.ExchangeRateNotFoundError
