@@ -12,5 +12,10 @@ class DatabaseUnavailableError(sqlite3.OperationalError):
 
 
 class CurrencyNotFoundError(Exception):
-    """Валюта не найдена"""
+    """Валюта не найдена."""
+    pass
+
+
+class ExchangeRateNotFoundError(Exception):
+    """Обменный курс не найден."""
     pass

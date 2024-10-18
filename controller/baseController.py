@@ -24,6 +24,9 @@ class BaseController:
         elif isinstance(exception, CurrencyNotFoundError):
             error_message = 'Currency not found'
             BaseController.send_response(handler, {'message': error_message}, 404)
+        elif isinstance(exception, ExchangeRateNotFoundError):
+            error_message = 'Exchange rate not found'
+            BaseController.send_response(handler, {'message': error_message}, 404)
         else:
             error_message = f'Error: {str(exception)}'
             BaseController.send_response(handler, {'message': error_message}, 400)

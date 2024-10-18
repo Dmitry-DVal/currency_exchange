@@ -1,9 +1,10 @@
 import os
-from myExceptions import *
 from model.currencyModel import CurrencyModel
+from dao.baseDao import BaseDao
+from dao import SQLqueries
 
 
-class CurrencyDao:
+class CurrencyDao(BaseDao):
     """Класс обращается к БД и получает список конкретной валюты, добавляет валюту в БД."""
 
     def __init__(self, currency_model=None):
@@ -13,43 +14,21 @@ class CurrencyDao:
 
     def get_currency(self) -> CurrencyModel:
         """Получает информацию по конкретной валюте из БД."""
-        query = "SELECT ID, Fullname, Code, Sign FROM currencies WHERE Code = ?"
+        query = SQLqueries.get_currency
         result = self._execute_query(query, (self.currency_model.code,))
         currency_model_response = self.make_currency_model_response(result)
         return currency_model_response
 
     def add_currency(self):
         """Добавляет валюту в БД"""
-        query = "INSERT INTO currencies (Code, Fullname, Sign) VALUES (?, ?, ?)"
+        query = SQLqueries.add_currency
         self._execute_query(query, (self.currency_model.code, self.currency_model.name, self.currency_model.sign))
-        query = "SELECT ID, Fullname, Code, Sign FROM currencies WHERE Code = ?"
+        query = SQLqueries.get_currency
         result = self._execute_query(query, (self.currency_model.code,))
         currency_model = self.make_currency_model_response(result)
-        # self.currency_model.id = result[0][0]  # Сохраняем ID в модель
         return currency_model
 
     def get_currencies(self) -> list:
         """Получает всю информацию из таблицы currencies"""
         query = "SELECT * FROM currencies"
         return self._execute_query(query)
-
-    def make_currency_model_response(self, data: list) -> CurrencyModel:
-        if data:
-            self.currency_model = CurrencyModel(data[0][0], data[0][1], data[0][2], data[0][3])
-            return self.currency_model
-        else:
-            raise CurrencyNotFoundError
-
-    def _execute_query(self, query, params=()):
-        try:
-            with sqlite3.connect(self.db_path) as con:
-                cur = con.cursor()
-                if params:
-                    cur.execute(query, params)
-                else:
-                    cur.execute(query)
-                return cur.fetchall()
-        except sqlite3.IntegrityError:
-            raise CurrencyCodeError("Currency code is not unique or does not match the format")
-        except sqlite3.OperationalError:
-            raise DatabaseUnavailableError("Database unavailable")
