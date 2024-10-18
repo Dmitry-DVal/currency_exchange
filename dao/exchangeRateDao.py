@@ -1,5 +1,6 @@
 import os
-from myExceptions import *
+
+import myExceptions
 from model.exchangeRateModel import ExchangeRateModel
 from dao.baseDao import BaseDao
 from dao import SQLqueries
@@ -25,7 +26,7 @@ class ExchangeRateDao(BaseDao):
                                                     data[0][9])
             return exchange_rate_model
         else:
-            raise ExchangeRateNotFoundError
+            raise myExceptions.ExchangeRateNotFoundError
 
     def update_exchange_rate(self):
         """Обновляет обменный курс в БД."""
@@ -36,14 +37,13 @@ class ExchangeRateDao(BaseDao):
         result = self._execute_query(query,
                                      (self.exchange_rate.baseCurrency.code, self.exchange_rate.targetCurrency.code))
         currency_model = self.make_exchange_rate_model_response(result)
-        print(currency_model.to_dict(), 'Вот и обновили')
         return currency_model
 
-    def get_exchange_rates(self):
-        """Получает список обменных курсов"""
-        with sqlite3.connect(self.db_path) as con:
-            cur = con.cursor()
-
-            cur.execute(SQLqueries.get_exchange_rates)
-            result = cur.fetchall()
-            return result
+    # def get_exchange_rates(self):
+    #     """Получает список обменных курсов"""
+    #     with sqlite3.connect(self.db_path) as con:
+    #         cur = con.cursor()
+    #
+    #         cur.execute(SQLqueries.get_exchange_rates)
+    #         result = cur.fetchall()
+    #         return result

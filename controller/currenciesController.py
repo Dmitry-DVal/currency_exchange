@@ -1,10 +1,11 @@
 from http.server import BaseHTTPRequestHandler
-from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
-from service.currenciesService import CurrenciesService
 import urllib.parse
+
 from controller.validator import Validator
 from controller.baseController import BaseController
+from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
 from dao.currencyDao import CurrencyDao
+from service.currenciesService import CurrenciesService
 
 
 class CurrenciesController(BaseController):
@@ -14,7 +15,7 @@ class CurrenciesController(BaseController):
         content_length = int(self.headers['Content-Length'])  # Получаем длину содержимого
         post_data = self.rfile.read(content_length).decode('utf-8')  # Читаем и декодируем данные
 
-        data = urllib.parse.parse_qs(post_data)  # {'name': ['Mavrod'], 'code': ['MYR'], 'sign': ['M']}
+        data = urllib.parse.parse_qs(post_data)
 
         if not Validator().is_currency_fields(data):
             error_message = 'The required form field is missing'

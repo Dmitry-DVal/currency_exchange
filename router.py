@@ -1,7 +1,9 @@
 from http.server import BaseHTTPRequestHandler
-from controller.currenciesController import CurrenciesController
-from controller.currencyController import CurrencyController
-from controller.exchangeRateController import ExchangeRateController
+
+from controller import CurrencyController, CurrenciesController, ExchangeRateController
+#from controller.currenciesController import CurrenciesController
+# from controller.currencyController import CurrencyController
+#from controller.exchangeRateController import ExchangeRateController
 
 routes = {
     'POST': {

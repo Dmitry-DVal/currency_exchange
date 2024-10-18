@@ -1,4 +1,5 @@
 import os
+
 from model.currencyModel import CurrencyModel
 from dao.baseDao import BaseDao
 from dao import SQLqueries
