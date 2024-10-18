@@ -1,16 +1,17 @@
 from http.server import BaseHTTPRequestHandler
-from service.currenciesService import CurrenciesService
 from controller.baseController import BaseController
+from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
+from dao.currencyDao import CurrencyDao
 
 
 class CurrencyController(BaseController):
     """Обработка запросов по пути '/currency/'"""
 
-    @staticmethod
-    def handle_get(handler: BaseHTTPRequestHandler):
+    def handle_get(self: BaseHTTPRequestHandler):
         try:
-            currency_code = handler.path.split('/')[-1]
-            response = CurrenciesService.get_currency(currency_code)
-            BaseController.send_response(handler, response, 200)
+            currency_code = self.path.split('/')[-1]
+            currency_dto = CurrencyRegistrationDTO(code=currency_code)
+            response = CurrencyDao(currency_dto).get_currency()  # Почему тут
+            BaseController.send_response(self, response.__dict__, 200)
         except Exception as e:
-            BaseController.error_handler(handler, e)
+            BaseController.error_handler(self, e)

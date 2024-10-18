@@ -1,0 +1,2 @@
+class ExchangeRateDao:
+    pass

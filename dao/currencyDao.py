@@ -11,11 +11,11 @@ class CurrencyDao:
         # Построение пути к базе данных относительно текущего файла
         self.db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
 
-    def get_currency(self):
+    def get_currency(self) -> CurrencyModel:
         """Получает информацию по конкретной валюте из БД."""
         query = "SELECT ID, Fullname, Code, Sign FROM currencies WHERE Code = ?"
         result = self._execute_query(query, (self.currency_model.code,))
-        currency_model_response = self.make_model_response(result)
+        currency_model_response = self.make_currency_model_response(result)
         return currency_model_response
 
     def add_currency(self):
@@ -24,15 +24,16 @@ class CurrencyDao:
         self._execute_query(query, (self.currency_model.code, self.currency_model.name, self.currency_model.sign))
         query = "SELECT ID, Fullname, Code, Sign FROM currencies WHERE Code = ?"
         result = self._execute_query(query, (self.currency_model.code,))
-        self.currency_model.id = result[0][0]  # Сохраняем ID в модель
-        return self.currency_model
+        currency_model = self.make_currency_model_response(result)
+        # self.currency_model.id = result[0][0]  # Сохраняем ID в модель
+        return currency_model
 
     def get_currencies(self) -> list:
         """Получает всю информацию из таблицы currencies"""
         query = "SELECT * FROM currencies"
         return self._execute_query(query)
 
-    def make_model_response(self, data):
+    def make_currency_model_response(self, data: list) -> CurrencyModel:
         if data:
             self.currency_model = CurrencyModel(data[0][0], data[0][1], data[0][2], data[0][3])
             return self.currency_model
