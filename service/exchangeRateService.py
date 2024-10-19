@@ -1,4 +1,3 @@
-from model.exchangeRateModel import ExchangeRateModel
 from dao.exchangeRateDao import ExchangeRateDao
 
 

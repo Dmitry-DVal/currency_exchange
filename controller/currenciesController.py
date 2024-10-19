@@ -32,10 +32,9 @@ class CurrenciesController(BaseController):
         except Exception as e:
             BaseController.error_handler(self, e)
 
-    @staticmethod
-    def handle_get(handler: BaseHTTPRequestHandler):
+    def handle_get(self: BaseHTTPRequestHandler):
         try:
             response = CurrenciesService().get_currencies()
-            BaseController.send_response(handler, response, 200)
+            BaseController.send_response(self, response, 200)
         except Exception as e:
-            BaseController.error_handler(handler, e)
+            BaseController.error_handler(self, e)

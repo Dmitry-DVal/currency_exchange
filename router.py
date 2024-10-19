@@ -28,7 +28,7 @@ class Router(BaseHTTPRequestHandler):
         path = self.path.split('/')[1]
         handler = routes['POST'].get(path)
         if handler:
-            handler(self)  # Почему тут? Unexpected argument
+            handler(self)
         else:
             self.send_page_not_found()
 
