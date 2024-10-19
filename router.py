@@ -1,6 +1,8 @@
 from http.server import BaseHTTPRequestHandler
+from urllib.parse import urlparse
 
-from controller import CurrencyController, CurrenciesController, ExchangeRateController, ExchangeRatesController
+from controller import CurrencyController, CurrenciesController, ExchangeRateController, ExchangeRatesController, \
+    ExchangeController
 
 routes = {
     'POST': {
@@ -12,7 +14,7 @@ routes = {
         'currency': CurrencyController.handle_get,
         'exchangeRate': ExchangeRateController.handle_get,
         'exchangeRates': ExchangeRatesController.handle_get,
-        # '/exchange': ExchangeCurrencyController.handle_get
+        'exchange': ExchangeController.handle_get
     },
     'PATCH': {
         'exchangeRate': ExchangeRateController.handle_patch,
@@ -25,30 +27,30 @@ class Router(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Обработчик POST запросов"""
-        path = self.path.split('/')[1]
-        handler = routes['POST'].get(path)
-        if handler:
-            handler(self)
-        else:
-            self.send_page_not_found()
+        handler = self.select_handler('POST')
+        self.start_handling(handler)
 
     def do_GET(self):
         """Обработчик GET запросов"""
-        path = self.path.split('/')[1]
-        handler = routes['GET'].get(path)
+        handler = self.select_handler('GET')
+        self.start_handling(handler)
+
+    def do_PATCH(self):
+        """Обработчик PATCH запросов"""
+        handler = self.select_handler('PATCH')
+        self.start_handling(handler)
+
+    def start_handling(self, handler):
         if handler:
             handler(self)
         else:
             self.send_page_not_found()
 
-    def do_PATCH(self):
-        """Обработчик PATCH запросов"""
-        path = self.path.split('/')[1]
-        handler = routes['PATCH'].get(path)
-        if handler:
-            handler(self)
-        else:
-            self.send_page_not_found()
+    def select_handler(self, type_http_request):
+        parsed_path = urlparse(self.path)
+        path = parsed_path.path.split('/')[1]
+        handler = routes[type_http_request].get(path)
+        return handler
 
     def send_page_not_found(self):
         self.send_response(404)
