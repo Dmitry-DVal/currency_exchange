@@ -18,7 +18,6 @@ get_exchange_rate = """SELECT
         JOIN currencies AS tc ON er.TargetCurrencyId = tc.ID
         WHERE base_currency_code == ? AND target_currency_code == ?"""
 
-
 get_currency = "SELECT ID, Fullname, Code, Sign FROM currencies WHERE Code = ?"
 
 add_currency = "INSERT INTO currencies (Code, Fullname, Sign) VALUES (?, ?, ?)"
@@ -42,9 +41,14 @@ get_exchange_rates = """SELECT
     JOIN currencies AS bc ON er.BaseCurrencyId = bc.ID
     JOIN currencies AS tc ON er.TargetCurrencyId = tc.ID"""
 
-
 update_exchange_rate = """UPDATE exchange_rates 
         SET 
             Rate = ?
         WHERE BaseCurrencyId = (SELECT ID FROM currencies WHERE Code = ?)
         AND TargetCurrencyId = (SELECT ID FROM currencies WHERE Code = ?)"""
+
+add_exchange_rate = """INSERT INTO exchange_rates (BaseCurrencyId, TargetCurrencyId, Rate)
+VALUES (
+  (SELECT ID FROM currencies WHERE Code = ?),
+  (SELECT ID FROM currencies WHERE Code = ?),
+  ?)"""

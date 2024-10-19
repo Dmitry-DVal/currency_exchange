@@ -47,3 +47,15 @@ class ExchangeRateDao(BaseDao):
             return exchange_rate_model
         else:
             raise myExceptions.ExchangeRateNotFoundError
+
+    def add_exchange_rate(self):
+        """Добавляет обменный курс в БД."""
+        query = SQLqueries.add_exchange_rate
+        self._execute_query(query, (self.exchange_rate.baseCurrency.code,
+                                    self.exchange_rate.targetCurrency.code,
+                                    self.exchange_rate.rate,))
+        query = SQLqueries.get_exchange_rate
+        result = self._execute_query(query, (self.exchange_rate.baseCurrency.code,
+                                     self.exchange_rate.targetCurrency.code))
+        currency_model = self.make_exchange_rate_model_response(result)
+        return currency_model
