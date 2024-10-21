@@ -1,5 +1,3 @@
-import os
-
 from model.currencyModel import CurrencyModel
 from dao.baseDao import BaseDao
 from dao import SQLqueries
@@ -9,9 +7,8 @@ class CurrencyDao(BaseDao):
     """Класс обращается к БД и получает список конкретной валюты, добавляет валюту в БД."""
 
     def __init__(self, currency_model: CurrencyModel = None):
+        super().__init__()
         self.currency = currency_model
-        # Построение пути к базе данных относительно текущего файла
-        self.db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
 
     def get_currency(self) -> CurrencyModel:
         """Получает информацию по конкретной валюте из БД."""

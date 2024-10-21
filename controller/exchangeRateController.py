@@ -7,6 +7,7 @@ from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
 from model import ExchangeRateModel, CurrencyModel
 from dao.exchangeRateDao import ExchangeRateDao
 
+
 class ExchangeRateController(BaseController):
     """Обработка запросов по пути '/exchangeRate"""
 

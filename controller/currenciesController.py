@@ -3,7 +3,7 @@ import urllib.parse
 
 from controller.validator import Validator
 from controller.baseController import BaseController
-from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
+from model.currencyModel import CurrencyModel
 from dao.currencyDao import CurrencyDao
 from service.currenciesService import CurrenciesService
 
@@ -12,8 +12,8 @@ class CurrenciesController(BaseController):
     """Обработка запросов по пути '/currencies'"""
 
     def handle_post(self: BaseHTTPRequestHandler):
-        content_length = int(self.headers['Content-Length'])  # Получаем длину содержимого
-        post_data = self.rfile.read(content_length).decode('utf-8')  # Читаем и декодируем данные
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode('utf-8')
 
         data = urllib.parse.parse_qs(post_data)
 
@@ -22,12 +22,11 @@ class CurrenciesController(BaseController):
             BaseController.send_response(self, {'message': error_message}, 400)
             return
 
-        currency_dto = CurrencyRegistrationDTO(name=data.get('name')[0],
-                                               code=data.get('code')[0],
-                                               sign=data.get('sign')[0])
         try:
-            response = CurrencyDao(
-                currency_dto).add_currency()
+            currency = CurrencyModel(name=data.get('name')[0],
+                                     code=data.get('code')[0],
+                                     sign=data.get('sign')[0])
+            response = CurrencyDao(currency).add_currency()
             BaseController.send_response(self, response.__dict__, 200)
         except Exception as e:
             BaseController.error_handler(self, e)

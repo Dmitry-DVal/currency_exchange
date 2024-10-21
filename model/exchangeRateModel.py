@@ -3,7 +3,7 @@ from model.currencyModel import CurrencyModel
 
 class ExchangeRateModel:
     def __init__(self, id: str = None, base_currency: CurrencyModel = None, target_currency: CurrencyModel = None,
-                 rate: str = None):
+                 rate: float = None):
         self.id = id
         self.baseCurrency = base_currency
         self.targetCurrency = target_currency
