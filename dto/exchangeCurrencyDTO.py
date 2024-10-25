@@ -1,11 +1,13 @@
+from dataclasses import dataclass
+
+from model import CurrencyModel
+@dataclass
 class ExchangeCurrencyDTO:
-    def __init__(self, base_currency: tuple, target_currency: tuple,
-                 rate: float, amount: float, converted_amount: float):
-        self.baseCurrency = base_currency.__dict__
-        self.targetCurrency = target_currency.__dict__
-        self.rate = rate
-        self.amount = amount
-        self.convertedAmount = converted_amount
+    baseCurrency: CurrencyModel
+    targetCurrency: CurrencyModel
+    rate: float
+    amount: float
+    convertedAmount: float
 
     def to_dict(self) -> dict:
         return {
@@ -15,6 +17,8 @@ class ExchangeCurrencyDTO:
             "amount": self.amount,
             "convertedAmount": self.convertedAmount
         }
+
+
 
 
 

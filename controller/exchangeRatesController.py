@@ -29,8 +29,8 @@ class ExchangeRatesController(BaseController):
         try:
             base_currency_model, target_currency_model = (CurrencyModel(code=data['baseCurrencyCode'][0]),
                                                           CurrencyModel(code=data['targetCurrencyCode'][0]))
-            exchange_rates_model = ExchangeRateModel(base_currency=base_currency_model,
-                                                     target_currency=target_currency_model,
+            exchange_rates_model = ExchangeRateModel(baseCurrency=base_currency_model,
+                                                     targetCurrency=target_currency_model,
                                                      rate=float(data['rate'][0]))
             response = ExchangeRateDao(exchange_rates_model).add_exchange_rate()
             BaseController.send_response(self, response.to_dict(), 200)

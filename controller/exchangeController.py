@@ -19,10 +19,10 @@ class ExchangeController(BaseController):
             base_currency_model, target_currency_model = (CurrencyModel(code=data['from']),
                                                           CurrencyModel(code=data[
                                                               'to']))
-            exchange_rates_model = ExchangeRateModel(base_currency=base_currency_model,
-                                                     target_currency=target_currency_model)
+            exchange_rates_model = ExchangeRateModel(baseCurrency=base_currency_model,
+                                                     targetCurrency=target_currency_model)
             exchange_rates_model.amount = float(data['amount'])
             response = CurrenciesService(exchange_rates_model).get_exchange_currency()
-            BaseController.send_response(self, response.__dict__, 200)
+            BaseController.send_response(self, response.to_dict(), 200)
         except Exception as e:
             BaseController.error_handler(self, e)

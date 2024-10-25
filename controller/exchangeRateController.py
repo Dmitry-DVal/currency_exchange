@@ -35,8 +35,8 @@ class ExchangeRateController(BaseController):
         path_parts = handler.path.split('/')[2]
         base_currency_model, target_currency_model = (CurrencyModel(code=path_parts[:3]),
                                                       CurrencyModel(code=path_parts[3:]),)
-        exchange_rate_dto = ExchangeRateModel(base_currency=base_currency_model,
-                                              target_currency=target_currency_model,
+        exchange_rate_dto = ExchangeRateModel(baseCurrency=base_currency_model,
+                                              targetCurrency=target_currency_model,
                                               rate=float(data.get('rate')[0]))
         try:
             response = ExchangeRateDao(exchange_rate_dto).update_exchange_rate()

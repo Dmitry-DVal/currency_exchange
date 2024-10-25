@@ -13,8 +13,7 @@ class BaseDao:
         if data:
             currency_model = CurrencyModel(data[0][0], data[0][1], data[0][2], data[0][3])
             return currency_model
-        else:
-            raise myExceptions.CurrencyNotFoundError
+        raise myExceptions.CurrencyNotFoundError
 
     def _execute_query(self, query, params=()):
         try:
@@ -37,5 +36,4 @@ class BaseDao:
             exchange_rate_model = ExchangeRateModel(data[0][0], base_currency_model, target_currency_model,
                                                     data[0][9])
             return exchange_rate_model
-        else:
-            raise myExceptions.ExchangeRateNotFoundError
+        raise myExceptions.ExchangeRateNotFoundError

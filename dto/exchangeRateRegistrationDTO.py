@@ -1,9 +1,9 @@
+from dataclasses import dataclass
+
 from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
 
-
+@dataclass
 class ExchangeRateRegistrationDTO:
-    def __init__(self, base_currency: CurrencyRegistrationDTO = None, target_currency: CurrencyRegistrationDTO = None,
-                 rate: float = None):
-        self.baseCurrency = base_currency
-        self.targetCurrency = target_currency
-        self.rate = rate
+    baseCurrency: CurrencyRegistrationDTO | None
+    targetCurrency: CurrencyRegistrationDTO | None
+    rate: float
