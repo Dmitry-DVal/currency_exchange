@@ -6,7 +6,7 @@ import my_exceptions
 
 class BaseController:
     @staticmethod
-    def send_response(handler: BaseHTTPRequestHandler, data: dict, status_code: int):
+    def send_response(handler: BaseHTTPRequestHandler, data: dict | list, status_code: int):
         json_response = json.dumps(data, indent=4)
         handler.send_response(status_code)
         handler.send_header("Access-Control-Allow-Origin", "*") #

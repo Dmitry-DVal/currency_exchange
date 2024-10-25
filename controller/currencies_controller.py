@@ -27,7 +27,7 @@ class CurrenciesController(BaseController):
                                      code=data.get('code')[0],
                                      sign=data.get('sign')[0])
             response = CurrencyDao(currency).add_currency()
-            BaseController.send_response(self, response.__dict__, 200)
+            BaseController.send_response(self, response.to_dict(), 200)
         except Exception as e:
             BaseController.error_handler(self, e)
 

@@ -13,6 +13,6 @@ class CurrencyController(BaseController):
             currency_code = self.path.split('/')[-1]
             currency_model = CurrencyModel(code=currency_code)
             response = CurrencyDao(currency_model).get_currency()  # Почему тут
-            BaseController.send_response(self, response.__dict__, 200)
+            BaseController.send_response(self, response.to_dict(), 200)
         except Exception as e:
             BaseController.error_handler(self, e)

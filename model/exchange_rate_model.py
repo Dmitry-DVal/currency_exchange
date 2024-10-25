@@ -12,7 +12,7 @@ class ExchangeRateModel:
     def to_dict(self) -> dict:
         return {
             "id": self.id,
-            "baseCurrency": self.baseCurrency.__dict__,
-            "targetCurrency": self.targetCurrency.__dict__,
+            "baseCurrency": self.baseCurrency.to_dict(),
+            "targetCurrency": self.targetCurrency.to_dict(),
             "rate": self.rate
         }
