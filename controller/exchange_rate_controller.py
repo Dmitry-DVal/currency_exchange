@@ -1,11 +1,11 @@
 from http.server import BaseHTTPRequestHandler
 import urllib.parse
 
-from controller.baseController import BaseController
+from controller.base_controller import BaseController
 from controller.validator import Validator
-from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
+from dto.currency_registration_dto import CurrencyRegistrationDTO
 from model import ExchangeRateModel, CurrencyModel
-from dao.exchangeRateDao import ExchangeRateDao
+from dao.exchange_rate_dao import ExchangeRateDao
 
 
 class ExchangeRateController(BaseController):

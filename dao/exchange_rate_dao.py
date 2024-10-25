@@ -1,6 +1,6 @@
-from model.exchangeRateModel import ExchangeRateModel
-from dao.baseDao import BaseDao
-from dao import SQLqueries
+from model.exchange_rate_model import ExchangeRateModel
+from dao.base_dao import BaseDao
+from dao import sql_queries
 
 
 class ExchangeRateDao(BaseDao):
@@ -9,17 +9,17 @@ class ExchangeRateDao(BaseDao):
         self.exchange_rate = exchange_rate
 
     def get_exchange_rate(self, base_currency_code: str, target_currency_code: str):
-        query = SQLqueries.get_exchange_rate
+        query = sql_queries.get_exchange_rate
         result = self._execute_query(query, (base_currency_code, target_currency_code))
         currency_model = self.make_exchange_rate_model_response(result)
         return currency_model
 
     def update_exchange_rate(self):
         """Обновляет обменный курс в БД."""
-        query = SQLqueries.update_exchange_rate
+        query = sql_queries.update_exchange_rate
         self._execute_query(query, (self.exchange_rate.rate,
                                     self.exchange_rate.baseCurrency.code, self.exchange_rate.targetCurrency.code))
-        query = SQLqueries.get_exchange_rate
+        query = sql_queries.get_exchange_rate
         result = self._execute_query(query,
                                      (self.exchange_rate.baseCurrency.code, self.exchange_rate.targetCurrency.code))
         currency_model = self.make_exchange_rate_model_response(result)
@@ -27,7 +27,7 @@ class ExchangeRateDao(BaseDao):
 
     def get_exchange_rates(self) -> list[ExchangeRateModel]:
         """Получает список обменных курсов"""
-        query = SQLqueries.get_exchange_rates
+        query = sql_queries.get_exchange_rates
         result = self._execute_query(query)
         response = []
         for i in result:
@@ -36,11 +36,11 @@ class ExchangeRateDao(BaseDao):
 
     def add_exchange_rate(self):
         """Добавляет обменный курс в БД."""
-        query = SQLqueries.add_exchange_rate
+        query = sql_queries.add_exchange_rate
         self._execute_query(query, (self.exchange_rate.baseCurrency.code,
                                     self.exchange_rate.targetCurrency.code,
                                     self.exchange_rate.rate,))
-        query = SQLqueries.get_exchange_rate
+        query = sql_queries.get_exchange_rate
         result = self._execute_query(query, (self.exchange_rate.baseCurrency.code,
                                              self.exchange_rate.targetCurrency.code))
         currency_model = self.make_exchange_rate_model_response(result)

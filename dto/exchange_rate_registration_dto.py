@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from dto.currencyRegistrationDTO import CurrencyRegistrationDTO
+from dto.currency_registration_dto import CurrencyRegistrationDTO
 
 @dataclass
 class ExchangeRateRegistrationDTO:

@@ -1,7 +1,7 @@
 from http.server import HTTPServer
 from router import Router
 
-port = 8080
+port = 8000
 
 if __name__ == "__main__":
     with HTTPServer(('', port), Router) as server:

@@ -1,2 +1,2 @@
-from model.currencyModel import CurrencyModel
-from model.exchangeRateModel import ExchangeRateModel
+from model.currency_model import CurrencyModel
+from model.exchange_rate_model import ExchangeRateModel

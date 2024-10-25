@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-import myExceptions
+import my_exceptions
 from model import CurrencyModel, ExchangeRateModel
 
 
@@ -13,7 +13,7 @@ class BaseDao:
         if data:
             currency_model = CurrencyModel(data[0][0], data[0][1], data[0][2], data[0][3])
             return currency_model
-        raise myExceptions.CurrencyNotFoundError
+        raise my_exceptions.CurrencyNotFoundError
 
     def _execute_query(self, query, params=()):
         try:
@@ -25,9 +25,9 @@ class BaseDao:
                     cur.execute(query)
                 return cur.fetchall()
         except sqlite3.IntegrityError:
-            raise myExceptions.CurrencyCodeError("Currency code is not unique or does not match the format")
+            raise my_exceptions.CurrencyCodeError("Currency code is not unique or does not match the format")
         except sqlite3.OperationalError:
-            raise myExceptions.DatabaseUnavailableError("Database unavailable")
+            raise my_exceptions.DatabaseUnavailableError("Database unavailable")
 
     def make_exchange_rate_model_response(self, data: list) -> ExchangeRateModel:
         if data:
@@ -36,4 +36,4 @@ class BaseDao:
             exchange_rate_model = ExchangeRateModel(data[0][0], base_currency_model, target_currency_model,
                                                     data[0][9])
             return exchange_rate_model
-        raise myExceptions.ExchangeRateNotFoundError
+        raise my_exceptions.ExchangeRateNotFoundError

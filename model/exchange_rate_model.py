@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from model.currencyModel import CurrencyModel
+from model.currency_model import CurrencyModel
 
 
 @dataclass

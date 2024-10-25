@@ -2,10 +2,10 @@ from http.server import BaseHTTPRequestHandler
 import urllib.parse
 
 from controller.validator import Validator
-from controller.baseController import BaseController
-from model.currencyModel import CurrencyModel
-from dao.currencyDao import CurrencyDao
-from service.currenciesService import CurrenciesService
+from controller.base_controller import BaseController
+from model.currency_model import CurrencyModel
+from dao.currency_dao import CurrencyDao
+from service.currencies_service import CurrenciesService
 
 
 class CurrenciesController(BaseController):

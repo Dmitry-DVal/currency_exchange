@@ -1,8 +1,8 @@
 from http.server import BaseHTTPRequestHandler
 
-from controller.baseController import BaseController
-from model.currencyModel import CurrencyModel
-from dao.currencyDao import CurrencyDao
+from controller.base_controller import BaseController
+from model.currency_model import CurrencyModel
+from dao.currency_dao import CurrencyDao
 
 
 class CurrencyController(BaseController):

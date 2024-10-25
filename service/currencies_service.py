@@ -1,8 +1,8 @@
-from model.currencyModel import CurrencyModel
+from model.currency_model import CurrencyModel
 
 from dto import ExchangeCurrencyDTO
 from dao import CurrencyDao, ExchangeRateDao
-from myExceptions import *
+from my_exceptions import *
 
 
 class CurrenciesService:
@@ -59,7 +59,7 @@ class CurrenciesService:
         return exchange_currency_dto
 
     def make_currency_model(self):
-        return CurrencyModel(name=self.dto.name, code=self.dto.code, sign=self.dto.sign)  # currencyModel
+        return CurrencyModel(name=self.dto.name, code=self.dto.code, sign=self.dto.sign)
 
     @staticmethod
     def make_currencies_dict(data: list) -> list:

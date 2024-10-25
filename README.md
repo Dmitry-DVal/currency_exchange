@@ -33,6 +33,9 @@ curl -X POST http://localhost:8000/currencies -d "name=Albanian Lek&code=ALL&sig
 (Подробную информацию по составлению запросов см в ссылке с информацией)
 
 
+### Создание Базы данных и таблиц в ней
+- перейти в dao/dataBase/..
+- Запустить currenciesDataBaseCreator.py и exchangeRatesDataBaseCreator.py
 
 ### Автор
 Дмитрий Валюженич

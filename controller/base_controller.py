@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 import json
 
-import myExceptions
+import my_exceptions
 
 
 class BaseController:
@@ -19,16 +19,16 @@ class BaseController:
     @staticmethod
     def error_handler(handler: BaseHTTPRequestHandler, exception: Exception):
         """Централизованная обработка ошибок"""
-        if isinstance(exception, myExceptions.CurrencyCodeError):
+        if isinstance(exception, my_exceptions.CurrencyCodeError):
             error_message = 'Currency code is not unique or does not match the format'
             BaseController.send_response(handler, {'message': error_message}, 409)
-        elif isinstance(exception, myExceptions.DatabaseUnavailableError):
+        elif isinstance(exception, my_exceptions.DatabaseUnavailableError):
             error_message = 'Database unavailable'
             BaseController.send_response(handler, {'message': error_message}, 500)
-        elif isinstance(exception, myExceptions.CurrencyNotFoundError):
+        elif isinstance(exception, my_exceptions.CurrencyNotFoundError):
             error_message = 'Currency not found'
             BaseController.send_response(handler, {'message': error_message}, 404)
-        elif isinstance(exception, myExceptions.ExchangeRateNotFoundError):
+        elif isinstance(exception, my_exceptions.ExchangeRateNotFoundError):
             error_message = 'Exchange rate not found'
             BaseController.send_response(handler, {'message': error_message}, 404)
         else:

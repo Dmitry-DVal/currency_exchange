@@ -1,8 +1,8 @@
 from http.server import BaseHTTPRequestHandler
 
-from controller.baseController import BaseController
+from controller.base_controller import BaseController
 from controller.validator import Validator
-from service.currenciesService import CurrenciesService
+from service.currencies_service import CurrenciesService
 from model import ExchangeRateModel, CurrencyModel
 
 
