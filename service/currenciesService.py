@@ -78,8 +78,8 @@ class CurrenciesService:
         for row in data:
             result.append({
                 "id": row[0],
-                "name": row[1],
-                "code": row[2],
+                "name": row[2],
+                "code": row[1],
                 "sign": row[3]
             })
         return result

@@ -9,6 +9,9 @@ class BaseController:
     def send_response(handler: BaseHTTPRequestHandler, data: dict, status_code: int):
         json_response = json.dumps(data, indent=4)
         handler.send_response(status_code)
+        handler.send_header("Access-Control-Allow-Origin", "*") #
+        handler.send_header("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS") #
+        handler.send_header("Access-Control-Allow-Headers", "Content-Type") #
         handler.send_header("Content-Type", "application/json; charset=UTF-8")
         handler.end_headers()
         handler.wfile.write(json_response.encode("utf-8"))

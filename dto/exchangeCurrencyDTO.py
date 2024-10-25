@@ -5,7 +5,7 @@ class ExchangeCurrencyDTO:
         self.targetCurrency = target_currency.__dict__
         self.rate = rate
         self.amount = amount
-        self.converted_amount = converted_amount
+        self.convertedAmount = converted_amount
 
     def to_dict(self) -> dict:
         return {
@@ -13,5 +13,8 @@ class ExchangeCurrencyDTO:
             "targetCurrency": self.targetCurrency.__dict__,
             "rate": self.rate,
             "amount": self.amount,
-            "convertedAmount": self.converted_amount
+            "convertedAmount": self.convertedAmount
         }
+
+
+

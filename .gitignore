@@ -9,6 +9,8 @@ test/
 homework/
 pygame-readthedocs-io-en-latest.pdf
 server/
+currency-exchange-frontend/
+docker-compose.yml
 
 __pycache__/
 
