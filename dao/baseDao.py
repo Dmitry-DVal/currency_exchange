@@ -7,7 +7,7 @@ from model import CurrencyModel, ExchangeRateModel
 
 class BaseDao:
     def __init__(self):
-        self.db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
+        self._db_path = os.path.join(os.path.dirname(__file__), 'dataBase/currencies.db')
 
     def make_currency_model_response(self, data: list) -> CurrencyModel:
         if data:
@@ -17,7 +17,7 @@ class BaseDao:
 
     def _execute_query(self, query, params=()):
         try:
-            with sqlite3.connect(self.db_path) as con:
+            with sqlite3.connect(self._db_path) as con:
                 cur = con.cursor()
                 if params:
                     cur.execute(query, params)

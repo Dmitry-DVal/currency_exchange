@@ -11,10 +11,10 @@ pygame-readthedocs-io-en-latest.pdf
 server/
 currency-exchange-frontend/
 docker-compose.yml
+dao/dataBase/currencies.db
+
 
 __pycache__/
 
 # Добавим файлы для игнора с расширением /txt
 *.txt
-
-model/dataBase/currencies.db
