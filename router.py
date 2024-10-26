@@ -1,24 +1,29 @@
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse
 
-from controller import CurrencyController, CurrenciesController, ExchangeRateController, ExchangeRatesController, \
-    ExchangeController
+from controller import (
+    CurrencyController,
+    CurrenciesController,
+    ExchangeRateController,
+    ExchangeRatesController,
+    ExchangeController,
+)
 
 routes = {
-    'POST': {
-        'currencies': CurrenciesController.handle_post,
-        'exchangeRates': ExchangeRatesController.handle_post,
+    "POST": {
+        "currencies": CurrenciesController.handle_post,
+        "exchangeRates": ExchangeRatesController.handle_post,
     },
-    'GET': {
-        'currencies': CurrenciesController.handle_get,
-        'currency': CurrencyController.handle_get,
-        'exchangeRate': ExchangeRateController.handle_get,
-        'exchangeRates': ExchangeRatesController.handle_get,
-        'exchange': ExchangeController.handle_get
+    "GET": {
+        "currencies": CurrenciesController.handle_get,
+        "currency": CurrencyController.handle_get,
+        "exchangeRate": ExchangeRateController.handle_get,
+        "exchangeRates": ExchangeRatesController.handle_get,
+        "exchange": ExchangeController.handle_get,
     },
-    'PATCH': {
-        'exchangeRate': ExchangeRateController.handle_patch,
-    }
+    "PATCH": {
+        "exchangeRate": ExchangeRateController.handle_patch,
+    },
 }
 
 
@@ -34,17 +39,17 @@ class Router(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Обработчик POST запросов"""
-        handler = self.select_handler('POST')
+        handler = self.select_handler("POST")
         self.start_handling(handler)
 
     def do_GET(self):
         """Обработчик GET запросов"""
-        handler = self.select_handler('GET')
+        handler = self.select_handler("GET")
         self.start_handling(handler)
 
     def do_PATCH(self):
         """Обработчик PATCH запросов"""
-        handler = self.select_handler('PATCH')
+        handler = self.select_handler("PATCH")
         self.start_handling(handler)
 
     def start_handling(self, handler):
@@ -55,7 +60,7 @@ class Router(BaseHTTPRequestHandler):
 
     def select_handler(self, type_http_request):
         parsed_path = urlparse(self.path)
-        path = parsed_path.path.split('/')[1]
+        path = parsed_path.path.split("/")[1]
         handler = routes[type_http_request].get(path)
         return handler
 

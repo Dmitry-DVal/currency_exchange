@@ -1,26 +1,31 @@
-class Validator:
+from decimal import Decimal
+from decimal import InvalidOperation
 
+
+class Validator:
     @staticmethod
     def is_currency_fields(data: dict) -> bool:
         """Проверяет что все необходимые поля присутствуют в запросе"""
-        required_fields = ['name', 'code', 'sign']
+        required_fields = ["name", "code", "sign"]
         return all(f in data for f in required_fields)
 
     @staticmethod
     def is_exchange_rates_fields(data: dict) -> bool:
         """Проверяет что все необходимые поля присутствуют в запросе"""
-        required_fields = ['baseCurrencyCode', 'targetCurrencyCode', 'rate']
+        required_fields = ["baseCurrencyCode", "targetCurrencyCode", "rate"]
         try:
-            return all(f in data for f in required_fields) and isinstance((float(data['rate'][0])), float)
-        except ValueError:
+            return all(f in data for f in required_fields) and isinstance(
+                (Decimal((data["rate"][0]))), Decimal
+            )
+        except InvalidOperation:
             return False
 
     @staticmethod
     def is_exchange_rate_field(data: dict) -> bool:
         """Проверяет что все необходимые поля присутствуют в запросе"""
         try:
-            return 'rate' in data and isinstance((float(data['rate'][0])), float)
-        except ValueError:
+            return "rate" in data and isinstance((Decimal((data["rate"][0]))), Decimal)
+        except InvalidOperation:
             return False
 
     @staticmethod
@@ -28,19 +33,23 @@ class Validator:
         """Проверяет что все необходимые поля присутствуют в запросе"""
         try:
             result = Validator.convert_exchange_to_dict(data)
-            required_fields = ['from', 'to', 'amount']
-            return result if (
-                        all(field in result for field in required_fields) and isinstance((float(result['amount'])),
-                                                                                         float)) else False
-        except ValueError:
+            required_fields = ["from", "to", "amount"]
+            return (
+                result
+                if (
+                    all(field in result for field in required_fields)
+                    and isinstance((Decimal(result["amount"])), Decimal)
+                )
+                else False
+            )
+        except InvalidOperation:
             return False
-
 
     @staticmethod
     def convert_exchange_to_dict(data: str) -> dict or False:
         """Форматирует полученный запрос в словарь"""
         result = {}
-        for i in data.split('&'):
-            key, value = i.split('=')
-            result[key.replace('/exchange?', '')] = value
+        for i in data.split("&"):
+            key, value = i.split("=")
+            result[key.replace("/exchange?", "")] = value
         return result

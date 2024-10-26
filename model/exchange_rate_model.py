@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from model.currency_model import CurrencyModel
 
 
@@ -7,7 +8,7 @@ class ExchangeRateModel:
     id: str = None
     baseCurrency: CurrencyModel = None
     targetCurrency: CurrencyModel = None
-    rate: float = None
+    rate: str = None
 
     def to_dict(self) -> dict:
         return {

@@ -1,13 +1,15 @@
 from dataclasses import dataclass
 
 from model import CurrencyModel
+
+
 @dataclass
 class ExchangeCurrencyDTO:
     baseCurrency: CurrencyModel
     targetCurrency: CurrencyModel
-    rate: float
-    amount: float
-    convertedAmount: float
+    rate: str
+    amount: str
+    convertedAmount: str
 
     def to_dict(self) -> dict:
         return {

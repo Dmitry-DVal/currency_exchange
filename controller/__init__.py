@@ -1,5 +1,5 @@
-from controller.currency_controller import CurrencyController
 from controller.currencies_controller import CurrenciesController
+from controller.currency_controller import CurrencyController
+from controller.exchange_controller import ExchangeController
 from controller.exchange_rate_controller import ExchangeRateController
 from controller.exchange_rates_controller import ExchangeRatesController
-from controller.exchange_controller import ExchangeController

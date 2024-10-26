@@ -1,7 +1,8 @@
-from model.currency_model import CurrencyModel
+from decimal import Decimal
 
-from dto import ExchangeCurrencyDTO
 from dao import CurrencyDao, ExchangeRateDao
+from dto import ExchangeCurrencyDTO
+from model.currency_model import CurrencyModel
 from my_exceptions import *
 
 
@@ -31,31 +32,30 @@ class CurrenciesService:
     def get_direct_exchange_rate(self) -> ExchangeCurrencyDTO:
         exchange_rate = ExchangeRateDao(self.dto).get_exchange_rate(self.dto.baseCurrency.code,
                                                                     self.dto.targetCurrency.code)
-        converted_amount = round(self.dto.amount * exchange_rate.rate, 2)
+        converted_amount = str(round(self.dto.amount * Decimal(exchange_rate.rate), 2))
         exchange_currency_dto = ExchangeCurrencyDTO(exchange_rate.baseCurrency, exchange_rate.targetCurrency,
-                                                    exchange_rate.rate, self.dto.amount, converted_amount)
+                                                    exchange_rate.rate, str(self.dto.amount), converted_amount)
         return exchange_currency_dto
 
     def get_reverse_exchange_rate(self) -> ExchangeCurrencyDTO:
         exchange_rate = ExchangeRateDao(self.dto).get_exchange_rate(self.dto.targetCurrency.code,
                                                                     self.dto.baseCurrency.code)
-        rate = round(1 / exchange_rate.rate, 5)
-        converted_amount = round(self.dto.amount * rate, 2)
-        exchange_currency_dto = ExchangeCurrencyDTO(exchange_rate.targetCurrency, exchange_rate.baseCurrency, rate,
-                                                    self.dto.amount, converted_amount)
-        print(exchange_currency_dto)
+        rate = round(1 / Decimal(exchange_rate.rate), 5)
+        converted_amount = str(round(self.dto.amount * rate, 2))
+        exchange_currency_dto = ExchangeCurrencyDTO(exchange_rate.targetCurrency, exchange_rate.baseCurrency, str(rate),
+                                                    str(self.dto.amount), converted_amount)
         return exchange_currency_dto
 
     def get_cross_usd_rate(self) -> ExchangeCurrencyDTO:
-        exchange_rate_USD_A = ExchangeRateDao(self.dto).get_exchange_rate("USD",
+        exchange_rate_usd_a = ExchangeRateDao(self.dto).get_exchange_rate("USD",
                                                                           self.dto.baseCurrency.code)
-        exchange_rate_USD_B = ExchangeRateDao(self.dto).get_exchange_rate("USD",
+        exchange_rate_usd_b = ExchangeRateDao(self.dto).get_exchange_rate("USD",
                                                                           self.dto.targetCurrency.code)
-        rate = round(exchange_rate_USD_B.rate / exchange_rate_USD_A.rate, 5)
-        converted_amount = round(self.dto.amount * rate, 2)
-        exchange_currency_dto = ExchangeCurrencyDTO(exchange_rate_USD_A.targetCurrency,
-                                                    exchange_rate_USD_B.targetCurrency, rate,
-                                                    self.dto.amount, converted_amount)
+        rate = round(Decimal(exchange_rate_usd_b.rate) / Decimal(exchange_rate_usd_a.rate), 5)
+        converted_amount = str(round(self.dto.amount * rate, 2))
+        exchange_currency_dto = ExchangeCurrencyDTO(exchange_rate_usd_a.targetCurrency,
+                                                    exchange_rate_usd_b.targetCurrency, str(rate),
+                                                    str(self.dto.amount), converted_amount)
         return exchange_currency_dto
 
     def make_currency_model(self):

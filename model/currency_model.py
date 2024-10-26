@@ -9,9 +9,4 @@ class CurrencyModel:
     sign: str = None
 
     def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "code": self.code,
-            "sign": self.sign
-        }
+        return {"id": self.id, "name": self.name, "code": self.code, "sign": self.sign}

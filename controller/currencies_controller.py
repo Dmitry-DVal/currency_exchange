@@ -1,25 +1,26 @@
-from http.server import BaseHTTPRequestHandler
 import urllib.parse
+from http.server import BaseHTTPRequestHandler
 
-from controller.validator import Validator
 from controller.base_controller import BaseController
-from model.currency_model import CurrencyModel
+from controller.validator import Validator
 from dao.currency_dao import CurrencyDao
+from model.currency_model import CurrencyModel
 from service.currencies_service import CurrenciesService
 
 
-class CurrenciesController(BaseController):
+class CurrenciesController:
     """Обработка запросов по пути '/currencies'"""
 
-    def handle_post(self: BaseHTTPRequestHandler):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length).decode('utf-8')
+    @staticmethod
+    def handle_post(handler: BaseHTTPRequestHandler):
+        content_length = int(handler.headers['Content-Length'])
+        post_data = handler.rfile.read(content_length).decode('utf-8')
 
         data = urllib.parse.parse_qs(post_data)
 
         if not Validator().is_currency_fields(data):
             error_message = 'The required form field is missing'
-            BaseController.send_response(self, {'message': error_message}, 400)
+            BaseController.send_response(handler, {'message': error_message}, 400)
             return
 
         try:
@@ -27,13 +28,14 @@ class CurrenciesController(BaseController):
                                      code=data.get('code')[0],
                                      sign=data.get('sign')[0])
             response = CurrencyDao(currency).add_currency()
-            BaseController.send_response(self, response.to_dict(), 200)
-        except Exception as e:
-            BaseController.error_handler(self, e)
+            BaseController.send_response(handler, response.to_dict(), 200)
+        except Exception as error:
+            BaseController.error_handler(handler, error)
 
-    def handle_get(self: BaseHTTPRequestHandler):
+    @staticmethod
+    def handle_get(handler: BaseHTTPRequestHandler):
         try:
             response = CurrenciesService().get_currencies()
-            BaseController.send_response(self, response, 200)
+            BaseController.send_response(handler, response, 200)
         except Exception as e:
-            BaseController.error_handler(self, e)
+            BaseController.error_handler(handler, e)

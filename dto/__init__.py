@@ -1,3 +1,3 @@
 from dto.currency_registration_dto import CurrencyRegistrationDTO
-from dto.exchange_rate_registration_dto import ExchangeRateRegistrationDTO
 from dto.exchange_currency_dto import ExchangeCurrencyDTO
+from dto.exchange_rate_registration_dto import ExchangeRateRegistrationDTO
